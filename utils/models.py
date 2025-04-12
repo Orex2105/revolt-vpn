@@ -1,3 +1,4 @@
+from typing import Optional
 from sqlalchemy import TEXT, INTEGER, UUID, TIMESTAMP, BOOLEAN, func, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 import uuid
@@ -8,53 +9,44 @@ from utils.database import Base
 class Users(Base):
     __tablename__ = "users"
 
-    id: Mapped[int] = mapped_column(INTEGER, primary_key=True)
-    created_at: Mapped[datetime] = mapped_column(TIMESTAMP, default=func.now())
-    expires_at: Mapped[datetime] = mapped_column(TIMESTAMP)
-    is_active: Mapped[bool] = mapped_column(BOOLEAN, default=True)
+    user_id: Mapped[uuid.UUID] = mapped_column(UUID, primary_key=True)
+    created_at: Mapped[datetime] = mapped_column(TIMESTAMP, default=func.now(), index=True)
+    expires_at: Mapped[Optional[datetime]] = mapped_column(TIMESTAMP, nullable=True, index=True)
+    is_active: Mapped[bool] = mapped_column(BOOLEAN, default=False, index=True)
+    was_ever_active: Mapped[bool] = mapped_column(BOOLEAN, default=False)
+    last_seen: Mapped[Optional[datetime]] = mapped_column(TIMESTAMP, nullable=True)
+    notes: Mapped[Optional[str]] = mapped_column(TEXT, nullable=True)
 
-    # Связь с таблицой Connections, back_populates - двустороння связь
-    connections: Mapped[list["Connections"]] = relationship("Connections", back_populates="user")
+    # Связь с таблицей Connections
+    connections: Mapped["Connections"] = relationship("Connections", back_populates="user", lazy="joined")
 
 
 class Servers(Base):
     __tablename__ = "servers"
 
-    id: Mapped[int] = mapped_column(INTEGER, primary_key=True, autoincrement=True)
-    server_id: Mapped[uuid.UUID] = mapped_column(UUID, unique=True)
-    server_name: Mapped[str] = mapped_column(TEXT)
+    server_id: Mapped[uuid.UUID] = mapped_column(UUID, primary_key=True, default=uuid.uuid4)
+    location: Mapped[str] = mapped_column(TEXT)
     address: Mapped[str] = mapped_column(TEXT)
     port: Mapped[int] = mapped_column(INTEGER, default=443)
+    panel_url: Mapped[str] = mapped_column(TEXT)
 
-    # Связь с таблицой Connections
-    connections: Mapped[list["Connections"]] = relationship("Connections", back_populates="server")
+    # Связь с таблицей Connections
+    connections: Mapped[list["Connections"]] = relationship("Connections", back_populates="server", lazy="joined")
 
 
 class Connections(Base):
     __tablename__ = 'connections'
 
     id: Mapped[int] = mapped_column(INTEGER, primary_key=True, autoincrement=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
-    server_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("servers.server_id"))
-    client_uuid: Mapped[uuid.UUID] = mapped_column(UUID)
+    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.user_id"), index=True)
+    server_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("servers.server_id"), index=True)
     flow: Mapped[str] = mapped_column(TEXT)
-    tag: Mapped[str] = mapped_column(TEXT, default='ANARCHY-VPN')
+    tag: Mapped[str] = mapped_column(TEXT, default='REVOLT-VPN')
     created_at: Mapped[datetime] = mapped_column(TIMESTAMP, default=func.now())
+    is_archived: Mapped[bool] = mapped_column(BOOLEAN, default=False, index=True)
+    archived_at: Mapped[Optional[datetime]] = mapped_column(TIMESTAMP, nullable=True)
 
-    # Связь с таблицой Users
-    user: Mapped["Users"] = relationship("Users", back_populates="connections")
-    # Связь с таблицой Servers
-    server: Mapped["Servers"] = relationship("Servers", back_populates="connections")
-
-
-class ArchivedConnections(Base):
-    __tablename__ = 'archived_connections'
-
-    id: Mapped[int] = mapped_column(INTEGER, primary_key=True, autoincrement=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
-    server_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("servers.server_id"))
-    client_uuid: Mapped[uuid.UUID] = mapped_column(UUID)
-    flow: Mapped[str] = mapped_column(TEXT)
-    tag: Mapped[str] = mapped_column(TEXT, default='ANARCHY-VPN')
-    created_at: Mapped[datetime] = mapped_column(TIMESTAMP, default=func.now())
-    archived_at: Mapped[datetime] = mapped_column(TIMESTAMP, default=func.now())
+    # Связь с Users
+    user: Mapped["Users"] = relationship("Users", back_populates="connections", lazy="joined")
+    # Связь с Servers
+    server: Mapped["Servers"] = relationship("Servers", back_populates="connections", lazy="joined")
