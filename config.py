@@ -1,7 +1,8 @@
 import os
 import dotenv
+from pathlib import Path
 
-dotenv.load_dotenv("config.env")
+dotenv.load_dotenv(Path(__file__).parent / "config.env")
 
 class DatabaseSettings:
     def __init__(self):

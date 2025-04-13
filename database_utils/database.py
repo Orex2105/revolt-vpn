@@ -1,7 +1,7 @@
 from sqlalchemy.orm import DeclarativeBase
-from sqlalchemy.ext.asyncio import AsyncAttrs, async_sessionmaker, create_async_engine
+from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.ext.asyncio import AsyncAttrs, async_sessionmaker, create_async_engine, AsyncEngine
 from config import database_settings
-
 
 DATABASE_URL = database_settings.get_db_url()
 
@@ -22,10 +22,19 @@ def connection(method):
         # Автоматическое открытие и закрытие (после выполнения) сессии
         async with async_session_maker() as session:
             try:
-                return await method(*args, session=session, **kwargs)
+                return await method(*args, **kwargs, session=session)
             except Exception as e:
                 # Откат сессии
                 await session.rollback()
                 raise e
 
     return wrapper
+
+
+async def create_tables(engine_: AsyncEngine = engine):
+    try:
+        async with engine_.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+    except SQLAlchemyError as e:
+        print(f"Database error: {e}")
+        raise e
