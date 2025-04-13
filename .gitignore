@@ -1,5 +1,7 @@
 # alembic
 *.ini
+.ini
+alembic.ini
 migration/
 
 # Byte-compiled / optimized / DLL files
