@@ -41,11 +41,11 @@ class Connections(Base):
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
     user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.user_id"), index=True)
     server_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("servers.server_id"), index=True)
-    flow: Mapped[str] = mapped_column(TEXT)
+    flow: Mapped[str] = mapped_column(TEXT, default='xtls-rprx-vision')
     tag: Mapped[str] = mapped_column(TEXT, default='REVOLT-VPN')
     created_at: Mapped[datetime] = mapped_column(TIMESTAMP, default=func.now())
     is_archived: Mapped[bool] = mapped_column(BOOLEAN, default=False, index=True)
-    archived_at: Mapped[Optional[datetime]] = mapped_column(TIMESTAMP, nullable=True)
+    archived_at: Mapped[Optional[datetime]] = mapped_column(TIMESTAMP, nullable=True, index=True)
 
     # Связь с Users
     user: Mapped["Users"] = relationship("Users", back_populates="connections", lazy="joined")
