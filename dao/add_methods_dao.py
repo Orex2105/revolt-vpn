@@ -73,7 +73,7 @@ async def add_new_server(session: AsyncSession,
     new_server = await ServersDAO.add(
         session=session,
         server_id=server_id,
-        location=location,
+        location=location.lower(),
         address=address,
         port=port,
         panel_url=panel_url

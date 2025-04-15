@@ -39,7 +39,7 @@ class Connections(Base):
     __tablename__ = 'connections'
 
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
-    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.user_id"), index=True)
+    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.user_id"), unique=True, index=True)
     server_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("servers.server_id"), index=True)
     flow: Mapped[str] = mapped_column(TEXT, default='xtls-rprx-vision')
     tag: Mapped[str] = mapped_column(TEXT, default='REVOLT-VPN')
