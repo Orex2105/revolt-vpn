@@ -2,7 +2,7 @@ import base64
 from typing import Union, Optional
 from uuid import UUID
 from dao.select_methods_dao import get_user_info
-from XUI.methods import get_connection_string
+from xui.methods import get_connection_string
 import logging
 
 logger = logging.getLogger(__name__)

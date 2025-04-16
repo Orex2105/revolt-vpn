@@ -1,16 +1,10 @@
 import os
 import dotenv
 from pathlib import Path
-from pydantic import BaseModel
+from pydantic_models.models import XUICredentials
 
 
 dotenv.load_dotenv(Path(__file__).parent / "config.env")
-
-
-class XUICredentials(BaseModel):
-    username: str
-    password: str
-    emojis: list[str]
 
 
 class DatabaseSettings:

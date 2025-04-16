@@ -4,7 +4,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Union, Optional
 from uuid import uuid5, UUID, NAMESPACE_DNS
 from datetime import datetime
-from database_utils.models import Users, Servers, Connections
 import logging
 
 logger = logging.getLogger(__name__)
@@ -19,8 +18,7 @@ async def add_user(session: AsyncSession,
                    was_ever_active: Optional[bool] = None,
                    last_seen: Optional[datetime] = None,
                    subscription_purchase_count: Optional[int] = None,
-                   notes: Optional[str] = None) -> Users:
-
+                   notes: Optional[str] = None):
     """
     :param session: объект класса AsyncSession (создается декоратором)
     :param user_tg_id: tg id пользователя (будет преобразован в uuid5)
@@ -51,6 +49,7 @@ async def add_user(session: AsyncSession,
 
     except Exception as e:
         logger.error(e)
+        return None
 
 
 @connection
@@ -60,8 +59,7 @@ async def add_new_server(session: AsyncSession,
                          port: int,
                          panel_url: str,
                          server_id: Optional[UUID] = None
-                         ) -> Optional[Servers]:
-
+                         ):
     """
     :param session: объект класса AsyncSession (создается декоратором)
     :param location: название локации
@@ -99,8 +97,7 @@ async def add_new_connection(session: AsyncSession,
                              created_at: Optional[datetime] = None,
                              is_archived: Optional[bool] = None,
                              archived_at: Optional[datetime] = None
-                             ) -> Optional[Connections]:
-
+                             ):
     """
     :param session: объект класса AsyncSession (создается декоратором)
     :param user_tg_id: tg id пользователя (будет преобразован в uuid5)
