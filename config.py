@@ -5,12 +5,12 @@ from pydantic import BaseModel
 
 
 dotenv.load_dotenv(Path(__file__).parent / "config.env")
-emojis = ['🚀', '🌟', '🌐', '👽', '🤠', '⚡️']
 
 
 class XUICredentials(BaseModel):
     username: str
     password: str
+    emojis: list[str]
 
 
 class DatabaseSettings:
@@ -29,10 +29,13 @@ class DatabaseSettings:
 class XUISettings:
     XUI_USERNAME = os.getenv('XUI_USERNAME')
     XUI_PASSWORD = os.getenv('XUI_PASSWORD')
+    EMOJIS = ['🚀', '🌟', '🌐', '👽', '🤠', '⚡️']
 
 
     @classmethod
     def get_xui_data(cls) -> XUICredentials:
         return XUICredentials(
             username=cls.XUI_USERNAME,
-            password=cls.XUI_PASSWORD)
+            password=cls.XUI_PASSWORD,
+            emojis=cls.EMOJIS
+        )
