@@ -1,4 +1,3 @@
-import base64
 from typing import Union, Optional
 from uuid import UUID
 from dao.select_methods_dao import get_user_info
@@ -12,7 +11,7 @@ async def generate_config_key(user_id: Union[str, UUID]) -> Optional[str]:
     try:
         user = await get_user_info(user_id=user_id)
         if user is None or user.is_active == False:
-            return 'Subscription not detected'
+            return None
 
         server = user.connections.server
 
@@ -27,10 +26,7 @@ async def generate_config_key(user_id: Union[str, UUID]) -> Optional[str]:
                                                 tag=tag,
                                                 panel_url=panel_url)
 
-        b = base64.b64encode(bytes(vless_key, 'utf-8'))
-        base64_vless_key = b.decode('utf-8')
-
-        return base64_vless_key
+        return vless_key
 
     except Exception as e:
         logger.error(e)

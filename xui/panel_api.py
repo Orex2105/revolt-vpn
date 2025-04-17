@@ -17,8 +17,9 @@ def login(method):
                 password=XUISettings.XUI_PASSWORD
             )
             await xui_api.login()
-            kwargs['xui_api'] = xui_api
-            return await method(*args, **kwargs)
+
+            return await method(*args, **kwargs, xui_api=xui_api)
+
         except Exception as e:
             logger.error(e)
             return await method(*args, **kwargs)

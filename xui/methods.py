@@ -101,14 +101,15 @@ async def get_server_status(panel_url: str,
 
     return ServerStatus(
         cpu_load=round(server_status.cpu, 2),
+        cpu_cores=server_status.cpu_cores,
+        cpu_speed=round(server_status.cpu_speed_mhz / 1000, 2),
         memory_usage=round(server_status.mem.current / 1024 ** 3, 2),
         memory_total=round(server_status.mem.total / 1024 ** 3, 2),
-        uptime=server_status.uptime,
-        cpu_speed=round(server_status.cpu_speed_mhz / 1000, 2),
         disk_memory_total=round(server_status.disk.total / (1024**3), 2),
         disk_memory_current=round(server_status.disk.current / (1024**3), 2),
         public_ip_v4=server_status.public_ip.ipv4,
         public_ip_v6=server_status.public_ip.ipv6,
+        uptime=server_status.uptime,
         xray_state=server_status.xray.state,
-        xray_version=server_status.xray.version
+        xray_version=server_status.xray.version,
     )

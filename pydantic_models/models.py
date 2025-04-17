@@ -19,3 +19,4 @@ class ServerStatus(BaseModel):
     disk_memory_current: float
     xray_state: str
     xray_version: str
+    cpu_cores: int
