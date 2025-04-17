@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 @connection
 async def add_user(session: AsyncSession,
-                   user_tg_id: Union[str, int],
+                   user_id: Union[str, UUID],
                    created_at: Optional[datetime] = None,
                    expires_at: Optional[datetime] = None,
                    is_active: Optional[bool] = None,
@@ -21,7 +21,7 @@ async def add_user(session: AsyncSession,
                    notes: Optional[str] = None):
     """
     :param session: объект класса AsyncSession (создается декоратором)
-    :param user_tg_id: tg id пользователя (будет преобразован в uuid5)
+    :param user_id: uuid пользователя
     :param created_at: дата создания записи о пользователе (записывается автоматические)
     :param expires_at: дата окончания подписки (по умолчанию Null)
     :param is_active: boolean со статусом подписки (по умолчанию False)
@@ -32,8 +32,6 @@ async def add_user(session: AsyncSession,
     :return: объект класса Users
     """
     try:
-        user_id = uuid5(NAMESPACE_DNS, str(user_tg_id))
-
         new_user = await UsersDAO.add(
             session=session,
             user_id=user_id,
@@ -53,7 +51,7 @@ async def add_user(session: AsyncSession,
 
 
 @connection
-async def add_new_server(session: AsyncSession,
+async def add_server(session: AsyncSession,
                          location: str,
                          address: str,
                          port: int,
@@ -89,8 +87,8 @@ async def add_new_server(session: AsyncSession,
 
 
 @connection
-async def add_new_connection(session: AsyncSession,
-                             user_tg_id: Union[str, int],
+async def add_connection(session: AsyncSession,
+                             user_id: Union[str, UUID],
                              server_id: UUID,
                              flow: Optional[str] = None,
                              tag: str = None,
@@ -100,7 +98,7 @@ async def add_new_connection(session: AsyncSession,
                              ):
     """
     :param session: объект класса AsyncSession (создается декоратором)
-    :param user_tg_id: tg id пользователя (будет преобразован в uuid5)
+    :param user_id: uuid пользователя
     :param server_id: uuid сервера
     :param flow: механизм управления трафиком (по умолчанию xtls-rprx-vision)
     :param tag: тэг для ключа подключения (по умолчанию Null)
@@ -110,8 +108,6 @@ async def add_new_connection(session: AsyncSession,
     :return: объект класса Connections
     """
     try:
-        user_id = uuid5(NAMESPACE_DNS, str(user_tg_id))
-
         new_connection = await ConnectionsDAO.add(
             session=session,
             user_id=user_id,

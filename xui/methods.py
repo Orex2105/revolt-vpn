@@ -84,7 +84,7 @@ async def get_connection_string(user_id: Union[str, UUID],
         connection_string = (
             f"vless://{user_id}@{server_address}:{server_port}"
             f"?type=tcp&security=reality&pbk={public_key}&fp=chrome&sni={website_name}"
-            f"&sid={short_id}&spx=%2F&flow={flow}#{tag if tag else ''}{random_emoji}"
+            f"&sid={short_id}&spx=%2F&flow={flow}#{tag if tag else ''} {random_emoji}"
         )
         return connection_string
 
