@@ -1,8 +1,8 @@
 from dao.base_dao import BaseDAO
 from database_utils.models import Users, Servers, Connections
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
-from typing import Sequence, Union, Optional
+from sqlalchemy import select, update, func
+from typing import Union, Optional
 from uuid import UUID
 import logging
 
@@ -24,6 +24,21 @@ class UsersDAO(BaseDAO):
         except Exception as e:
             logger.error(e)
             return None
+
+
+    @classmethod
+    async def update_last_seen(cls, session: AsyncSession, user_id: Union[str, UUID]) -> bool:
+        try:
+            query = update(cls.model).where(cls.model.user_id == user_id).values(last_seen=func.now())
+            await session.execute(query)
+            await session.commit()
+
+            return True
+
+        except Exception as e:
+            logger.error(e)
+            return False
+
 
 
 class ServersDAO(BaseDAO):

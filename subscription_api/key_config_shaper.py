@@ -10,11 +10,11 @@ logger = logging.getLogger(__name__)
 async def generate_config_key(user_id: Union[str, UUID]) -> Optional[str]:
     try:
         user = await get_user_info(user_id=user_id)
+
         if user is None or user.is_active == False:
             return None
 
         server = user.connections.server
-
         panel_url = server.panel_url
         address = server.address
         port = server.port
