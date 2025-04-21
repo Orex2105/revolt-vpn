@@ -23,7 +23,7 @@ class DatabaseSettings:
 class XUISettings:
     XUI_USERNAME = os.getenv('XUI_USERNAME')
     XUI_PASSWORD = os.getenv('XUI_PASSWORD')
-    EMOJIS = ['🚀', '🌟', '🌐', '👽', '🤠', '⚡️']
+    EMOJIS = ['🚀', '⭐️', '🌐', '👽', '🤠', '⚡️', '👾' '🔥', '🍌', '🤯', '⚙️']
 
 
     @classmethod
