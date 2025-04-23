@@ -1,7 +1,7 @@
 import os
 import dotenv
 from pathlib import Path
-from pydantic_models.models import XUICredentials
+from pydantic_models.models import XUICredentials, BotCredentials
 
 
 dotenv.load_dotenv(Path(__file__).parent / "config.env")
@@ -32,4 +32,15 @@ class XUISettings:
             username=cls.XUI_USERNAME,
             password=cls.XUI_PASSWORD,
             emojis=cls.EMOJIS
+        )
+
+
+class BotSettings:
+    TOKEN = os.getenv("BOT_TOKEN")
+
+
+    @classmethod
+    def get_token(cls) -> BotCredentials:
+        return BotCredentials(
+            token=cls.TOKEN
         )

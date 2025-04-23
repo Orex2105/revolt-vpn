@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from dao.dao_classes import UsersDAO, ConnectionsDAO, ServersDAO
-from database_utils.database import connection
-from database_utils.models import Users, Connections, Servers
+from dao.dao_classes import UsersDAO, AdminsDAO, ConnectionsDAO, ServersDAO
+from UTILS.connection import connection
+from database_utils.models import Users, Admins, Connections, Servers
 from typing import Union, Optional
 from uuid import UUID
 
@@ -15,6 +15,17 @@ async def get_user_info(session: AsyncSession,
     :return: объект класса Users или None
     """
     return await UsersDAO.get_user_info(session, user_id)
+
+
+@connection
+async def get_admin_info(session: AsyncSession,
+                        tg_id: int) ->  Optional[Admins]:
+    """
+    :param session: объект класса AsyncSession (создается декоратором)
+    :param tg_id: str tg id пользователя
+    :return: объект класса Admins или None
+    """
+    return await AdminsDAO.get_admin_info(session, tg_id)
 
 
 @connection

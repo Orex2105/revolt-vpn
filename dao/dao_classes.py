@@ -1,5 +1,5 @@
 from dao.base_dao import BaseDAO
-from database_utils.models import Users, Servers, Connections
+from database_utils.models import Users, Admins, Servers, Connections
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, update, func
 from typing import Union, Optional
@@ -39,6 +39,22 @@ class UsersDAO(BaseDAO):
             logger.error(e)
             return False
 
+
+class AdminsDAO(BaseDAO):
+    model = Admins
+
+    @classmethod
+    async def get_admin_info(cls, session: AsyncSession,
+                            tg_id: int) -> Optional[Admins]:
+        try:
+            query = select(cls.model).where(cls.model.tg_id == tg_id)
+            result = await session.execute(query)
+
+            return result.unique().scalar_one_or_none()
+
+        except Exception as e:
+            logger.error(e)
+            return None
 
 
 class ServersDAO(BaseDAO):

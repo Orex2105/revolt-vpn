@@ -1,5 +1,5 @@
 from dao.dao_classes import UsersDAO, ServersDAO, ConnectionsDAO
-from database_utils.database import connection
+from UTILS.connection import connection
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Union, Optional
 from uuid import uuid5, UUID, NAMESPACE_DNS

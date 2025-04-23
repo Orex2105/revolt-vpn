@@ -10,6 +10,7 @@ class Users(Base):
     __tablename__ = "users"
 
     user_id: Mapped[uuid.UUID] = mapped_column(UUID, primary_key=True)
+    tg_id: Mapped[int] = mapped_column(BigInteger, nullable=True, unique=True)
     created_at: Mapped[datetime] = mapped_column(TIMESTAMP, default=func.now(), index=True)
     expires_at: Mapped[Optional[datetime]] = mapped_column(TIMESTAMP, nullable=True, index=True)
     is_active: Mapped[bool] = mapped_column(BOOLEAN, default=False, index=True)
@@ -19,7 +20,19 @@ class Users(Base):
     notes: Mapped[Optional[str]] = mapped_column(TEXT, nullable=True)
 
     # Связь с таблицей Connections
-    connections: Mapped["Connections"] = relationship("Connections", back_populates="user", lazy="joined")
+    connections: Mapped["Connections"] = relationship("Connections",
+                                                      back_populates="user", lazy="joined")
+    admin: Mapped["Admins"] = relationship("Admins", back_populates="user", lazy="joined")
+
+
+class Admins(Base):
+    __tablename__ = 'admins'
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    name: Mapped[str] = mapped_column(TEXT, unique=True)
+    tg_id: Mapped[int] = mapped_column(ForeignKey("users.tg_id"))
+
+    user: Mapped["Users"] = relationship("Users", back_populates="admin", lazy="joined")
 
 
 class Servers(Base):
@@ -32,7 +45,8 @@ class Servers(Base):
     panel_url: Mapped[str] = mapped_column(TEXT)
 
     # Связь с таблицей Connections
-    connections: Mapped[list["Connections"]] = relationship("Connections", back_populates="server", lazy="joined")
+    connections: Mapped[list["Connections"]] = relationship("Connections",
+                                                          back_populates="server", lazy="joined")
 
 
 class Connections(Base):

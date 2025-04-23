@@ -7,6 +7,10 @@ class XUICredentials(BaseModel):
     emojis: list[str]
 
 
+class BotCredentials(BaseModel):
+    token: str
+
+
 class ServerStatus(BaseModel):
     public_ip_v4: str
     public_ip_v6: str
