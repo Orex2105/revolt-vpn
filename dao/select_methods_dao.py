@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from dao.dao_classes import UsersDAO, AdminsDAO, ConnectionsDAO, ServersDAO
-from UTILS.connection import connection
+from utils.decorators.connection import connection
 from database_utils.models import Users, Admins, Connections, Servers
 from typing import Union, Optional
 from uuid import UUID
@@ -38,6 +38,15 @@ async def get_server_info(session: AsyncSession, location: Optional[str]=None,
     :return: объект класса Servers или None
     """
     return await ServersDAO.get_server_info(session, location, server_id)
+
+
+@connection
+async def get_servers_locations(session: AsyncSession) -> Optional[list[str]]:
+    """
+    :param session: объект класса AsyncSession (создается декоратором)
+    :return: список локаций или None
+    """
+    return await ServersDAO.get_servers_locations(session)
 
 
 @connection

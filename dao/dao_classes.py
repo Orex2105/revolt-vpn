@@ -1,7 +1,7 @@
 from dao.base_dao import BaseDAO
 from database_utils.models import Users, Admins, Servers, Connections
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, update, func
+from sqlalchemy import select, update, func, ScalarResult
 from typing import Union, Optional
 from uuid import UUID
 import logging
@@ -80,6 +80,18 @@ class ServersDAO(BaseDAO):
         except Exception as e:
             logger.error(e)
             return None
+
+
+    @classmethod
+    async def get_servers_locations(cls, session: AsyncSession) -> Optional[ScalarResult[str]]:
+        try:
+            query = select(cls.model.location)
+            result = await session.execute(query)
+
+            return result.scalars()
+
+        except Exception as e:
+            logger.error(e)
 
 
 class ConnectionsDAO(BaseDAO):

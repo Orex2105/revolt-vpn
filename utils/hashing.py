@@ -1,4 +1,3 @@
-from typing import Union
 from uuid import uuid5, UUID, NAMESPACE_DNS
 
 

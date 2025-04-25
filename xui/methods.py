@@ -1,5 +1,5 @@
 from py3xui import AsyncApi, Client
-from UTILS.login import login
+from utils.decorators.login import login
 from random import randint
 from typing import Optional, Union
 from config import XUISettings

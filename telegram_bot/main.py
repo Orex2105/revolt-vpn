@@ -1,12 +1,12 @@
-import aiogram as ag
+from aiogram import Dispatcher
 from config import BotSettings
-from telegram_bot.common_handlers import common_router
+from telegram_bot.handlers.common_handlers import common_router
 import asyncio
 
 
-dp = ag.Dispatcher()
+dp = Dispatcher()
 dp.include_router(common_router)
-bot = ag.Bot(BotSettings.get_token().token)
+bot = BotSettings.bot
 
 
 async def main() -> None:
