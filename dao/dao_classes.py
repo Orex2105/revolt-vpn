@@ -57,6 +57,20 @@ class AdminsDAO(BaseDAO):
             return None
 
 
+    @classmethod
+    async def get_all_admins(cls, session: AsyncSession) -> Optional[list[int]]:
+        try:
+            query = select(cls.model)
+            result = await session.execute(query)
+            admins = result.unique().scalars().all()
+
+            return [admin.tg_id for admin in admins]
+
+        except Exception as e:
+            logger.error(e)
+            return None
+
+
 class ServersDAO(BaseDAO):
     model = Servers
 

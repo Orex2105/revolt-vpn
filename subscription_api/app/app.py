@@ -20,4 +20,4 @@ async def key_issuance(user_uuid: str):
 
         return config_key
 
-    return HTTPException(status_code=404, detail="Subscription not detected")
+    raise HTTPException(status_code=404, detail="Subscription not detected")

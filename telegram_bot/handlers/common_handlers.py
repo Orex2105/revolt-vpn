@@ -5,11 +5,14 @@ from aiogram.utils.chat_action import ChatActionSender
 from telegram_bot.inline_keyboards.command_start import command_start_inline_keyboard
 from telegram_bot.inline_keyboards.key_settings_panel import key_settings_panel
 from utils.hashing import hash_uuid5
-from utils.ping import server_ping
-from dao.select_methods_dao import get_connection_info
+from utils.ping import is_alive
+from urllib.parse import urlparse
 from config import BotSettings
+from utils.cache import DataCache
+import logging
 
 bot = BotSettings.bot
+logger = logging.getLogger(__name__)
 
 common_router = Router()
 
@@ -35,17 +38,18 @@ async def key_settings(callback: types.CallbackQuery):
     user_id = callback.message.chat.id
 
     async with ChatActionSender.typing(bot=bot, chat_id=user_id):
-        connection = await get_connection_info(user_id=await hash_uuid5(str(user_id)))
-        host = connection.server.address
+        connection = await DataCache.connection(user_id=await hash_uuid5(str(user_id)))
 
-        server_alive = '🟢' if server_ping(host=host) else '🔴'
-        delay = server_ping(host=host)
+        url = urlparse(connection.server.panel_url)
+        host = url.hostname
+        port = url.port
+
+        server_alive = '🟢' if await is_alive(host=host, port=port) else '🔴'
 
         key_url = f'https://anarchyproxy.online/connection/sub/{connection.user_id}'
 
         keyboard = await key_settings_panel()
         await callback.message.answer(f'🌐 <b>Локация</b>: {connection.server.location}\n'
-                                      f'👀 <b>Доступность</b>: {server_alive}\n'
-                                      f'⏱️ <b>Задержка</b>: {delay} ms  \n\n'
+                                      f'👀 <b>Доступность</b>: {server_alive}\n\n'
                                       f'<code>{key_url}</code>', parse_mode='html',
                                       reply_markup=keyboard.as_markup())

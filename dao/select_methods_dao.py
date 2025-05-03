@@ -29,6 +29,15 @@ async def get_admin_info(session: AsyncSession,
 
 
 @connection
+async def get_all_admins(session: AsyncSession) -> Optional[list[int]]:
+    """
+    :param session: объект класса AsyncSession (создается декоратором)
+    :return: список из int с тг id администраторов
+    """
+    return await AdminsDAO.get_all_admins(session)
+
+
+@connection
 async def get_server_info(session: AsyncSession, location: Optional[str]=None,
                           server_id: Union[str, UUID]=None) -> Optional[Servers]:
     """

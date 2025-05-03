@@ -89,7 +89,7 @@ async def add_server(session: AsyncSession,
 @connection
 async def add_connection(session: AsyncSession,
                              user_id: Union[str, UUID],
-                             server_id: UUID,
+                             server_id: Union[str, UUID],
                              flow: Optional[str] = None,
                              tag: str = None,
                              created_at: Optional[datetime] = None,
@@ -101,7 +101,7 @@ async def add_connection(session: AsyncSession,
     :param user_id: uuid пользователя
     :param server_id: uuid сервера
     :param flow: механизм управления трафиком (по умолчанию xtls-rprx-vision)
-    :param tag: тэг для ключа подключения (по умолчанию Null)
+    :param tag: тэг для ключа подключения (по умолчанию REVOLT-VPN)
     :param created_at: дата создания записи о подключении (задается при создании записи)
     :param is_archived: boolean состояния ключа (действует или архив)
     :param archived_at: дата архивации (по умолчанию Null)

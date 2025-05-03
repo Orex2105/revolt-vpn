@@ -1,9 +1,11 @@
+import uuid
+
 from py3xui import AsyncApi, Client
 from utils.decorators.login import login
 from random import randint
 from typing import Optional, Union
 from config import XUISettings
-from uuid import UUID
+from uuid import UUID, NAMESPACE_DNS
 from time import time
 import logging
 from pydantic_models.models import ServerStatus
@@ -13,12 +15,12 @@ logger = logging.getLogger(__name__)
 
 @login
 async def add_new_client(user_tg_id: Union[str, int],
-                         user_id: Union[str, UUID],
+                         user_id: str,
                          panel_url: str,
                          subscription_duration: int,
                          inbound_id: int=1,
                          flow: str='xtls-rprx-vision',
-                         limit_ip: int=1,
+                         limit_ip: int=3,
                          xui_api: Optional[AsyncApi]=None
                          ) -> None:
     """

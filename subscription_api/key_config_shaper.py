@@ -15,18 +15,21 @@ async def generate_config_key(user_id: Union[str, UUID]) -> Optional[str]:
             return None
 
         server = user.connections.server
+        is_archived = user.connections.is_archived
         panel_url = server.panel_url
         address = server.address
         port = server.port
         tag = user.connections.tag
 
-        vless_key = await get_connection_string(user_id=user_id,
-                                                server_address=address,
-                                                server_port=port,
-                                                tag=tag,
-                                                panel_url=panel_url)
-
-        return vless_key
+        if not is_archived:
+            vless_key = await get_connection_string(user_id=user_id,
+                                                    server_address=address,
+                                                    server_port=port,
+                                                    tag=tag,
+                                                    panel_url=panel_url)
+            return vless_key
+        else:
+            return None
 
     except Exception as e:
         logger.error(e)
