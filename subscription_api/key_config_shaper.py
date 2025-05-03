@@ -1,6 +1,6 @@
 from typing import Union, Optional
 from uuid import UUID
-from dao.select_methods_dao import get_user_info
+from utils.cache import DataCache
 from xui.methods import get_connection_string
 import logging
 
@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 async def generate_config_key(user_id: Union[str, UUID]) -> Optional[str]:
     try:
-        user = await get_user_info(user_id=user_id)
+        user = await DataCache.user(user_id=user_id)
 
         if user is None or user.is_active == False:
             return None

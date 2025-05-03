@@ -24,3 +24,8 @@ class ServerStatus(BaseModel):
     xray_state: str
     xray_version: str
     cpu_cores: int
+
+
+class ServerIsAlive(BaseModel):
+    status: bool
+    last_check: str
