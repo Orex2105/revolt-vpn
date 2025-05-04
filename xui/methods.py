@@ -80,13 +80,10 @@ class XuiAPI:
             short_id = inbound.stream_settings.reality_settings["shortIds"][0]
             flow = inbound.stream_settings.reality_settings.get("flow", "xtls-rprx-vision")
 
-            emojis = XUISettings.EMOJIS
-            random_emoji = emojis[randint(0, len(emojis) - 1)]
-
             connection_string = (
                 f"vless://{user_id}@{server_address}:{server_port}"
                 f"?type=tcp&security=reality&pbk={public_key}&fp=chrome&sni={website_name}"
-                f"&sid={short_id}&spx=%2F&flow={flow}#{tag if tag else ''} {random_emoji}"
+                f"&sid={short_id}&spx=%2F&flow={flow}#{tag if tag else ''}"
             )
             return connection_string
 
