@@ -82,7 +82,7 @@ class XuiAPI:
 
             connection_string = (
                 f"vless://{user_id}@{server_address}:{server_port}"
-                f"?type=tcp&security=reality&pbk={public_key}&fp=chrome&sni={website_name}"
+                f"?type=tcp&security=reality&pbk={public_key}&fp=random&sni={website_name}"
                 f"&sid={short_id}&spx=%2F&flow={flow}#{tag if tag else ''}"
             )
             return connection_string
