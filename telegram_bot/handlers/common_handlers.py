@@ -29,7 +29,8 @@ async def key_settings(callback: types.CallbackQuery):
     async with ChatActionSender.typing(bot=bot, chat_id=user_id, interval=1):
         connection = await DataCache.connection(user_id=DataCache.uuid5_hashing(str(user_id)))
 
-        url = urlparse(connection.server.panel_url)
+        panel_url = connection.server.panel_url
+        url = urlparse(panel_url)
         host = url.hostname
         port = url.port
 
@@ -39,10 +40,16 @@ async def key_settings(callback: types.CallbackQuery):
 
         key_url = f'https://anarchyproxy.online/connection/sub/{connection.user_id}'
 
+        online = await DataCache.server_users_online(panel_url)
+        users_online = len(online) if len(online) > 0 else 1
+        load = round(50/users_online)
+        load_emoji = '⚠️' if load >= 50 else '📊'
+
         keyboard = await key_settings_panel()
         await callback.message.edit_text(f'🌎 <b>Локация</b>: {connection.server.location}\n'
                                          f'📡 <b>Доступность</b>: {status} | '
-                                         f'<span class="tg-spoiler">проверено в {last_check}</span>\n\n'
+                                         f'<span class="tg-spoiler">проверено в {last_check}</span>\n'
+                                         f'{load_emoji} Нагрузка на сервер: {load} %\n\n'
                                          f'<code>{key_url}</code>', parse_mode='html',
                                          reply_markup=keyboard.as_markup())
 

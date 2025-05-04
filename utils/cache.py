@@ -10,6 +10,7 @@ from uuid import UUID, uuid5, NAMESPACE_DNS
 from database_utils.models import Users
 from pydantic_models.models import ServerIsAlive
 from utils.ping import is_alive
+from xui.methods import XuiAPI
 
 logger = logging.getLogger(__name__)
 
@@ -19,6 +20,7 @@ class DataCache:
     users_cache_ttl = 60
     connections_cache_ttl = 30
     server_status_cache_ttl = 300
+    xui_online_list_cache_ttl = 10
 
 
     @staticmethod
@@ -44,6 +46,7 @@ class DataCache:
             return await get_all_admins()
         except Exception as e:
             logger.error(e)
+            return None
 
 
     @classmethod
@@ -71,10 +74,23 @@ class DataCache:
 
 
     @classmethod
-    async def startup_cache(cls):
-        await cls.admins()
+    async def startup_cache(cls) -> bool:
+        if await cls.admins():
+            return True
+        else:
+            return False
+
+
+    @staticmethod
+    async def cache_cleaner() -> None:
+        await caches.get("default").clear()
 
 
     @classmethod
-    async def cache_cleaner(cls) -> None:
-        await caches.get("default").clear()
+    @cached(xui_online_list_cache_ttl)
+    async def server_users_online(cls, panel_url) -> list[str]:
+        try:
+            return await XuiAPI.get_online_clients(panel_url=panel_url)
+        except Exception as e:
+            logger.error(e)
+            return []
