@@ -22,10 +22,7 @@ async def key_issuance(user_uuid: str):
 
         headers = {
             "profile-title": "REVOLT VPN",
-            "support-url": "https://t.me/kellpython",
             "subscription-userinfo": f"upload={traffic.up}; download={traffic.down}; total={traffic.total}; expire=2524608000",
-            "announce": "🚀 #27e8d5Тест",
-            "announce-url": "https://t.me/kellpython",
             "profile-update-interval": "6",
             "update-always": "true"
         }
