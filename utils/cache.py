@@ -7,7 +7,7 @@ import io
 from dao.select_methods_dao import get_all_admins, get_user_info, get_connection_info
 from typing import Union, Optional
 from uuid import UUID, uuid5, NAMESPACE_DNS
-from database_utils.models import Users
+from database_utils.models import Users, Connections
 from pydantic_models.models import ServerIsAlive
 from utils.ping import is_alive
 from xui.methods import XuiAPI
@@ -60,7 +60,7 @@ class DataCache:
 
     @classmethod
     @cached(connections_cache_ttl)
-    async def connection(cls, user_id: Union[str, UUID]) -> Optional[Users]:
+    async def connection(cls, user_id: Union[str, UUID]) -> Optional[Connections]:
         try:
             return await get_connection_info(user_id=user_id)
         except Exception as e:

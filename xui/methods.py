@@ -120,3 +120,10 @@ class XuiAPI:
     async def get_online_clients(panel_url: str,
                                 xui_api: Optional[AsyncApi]=None) -> list[str]:
         return await xui_api.client.online()
+
+
+    @staticmethod
+    @login
+    async def get_subscription_userinfo(panel_url: str,
+                                 xui_api: Optional[AsyncApi] = None):
+        return await xui_api.client.get_traffic_by_id('28ee569f-4a68-48c6-9464-135f93abfa78')

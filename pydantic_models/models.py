@@ -29,3 +29,9 @@ class ServerStatus(BaseModel):
 class ServerIsAlive(BaseModel):
     status: bool
     last_check: str
+
+
+class ClientTraffic(BaseModel):
+    up: int
+    down: int
+    total: int

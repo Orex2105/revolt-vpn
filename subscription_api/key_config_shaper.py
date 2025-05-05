@@ -1,5 +1,6 @@
 from typing import Union, Optional
 from uuid import UUID
+from pydantic_models.models import ClientTraffic
 from utils.cache import DataCache
 from xui.methods import XuiAPI
 import logging
@@ -34,3 +35,19 @@ async def generate_config_key(user_id: Union[str, UUID]) -> Optional[str]:
     except Exception as e:
         logger.error(e)
         return None
+
+
+async def get_traffic(user_id: Union[str, UUID]):
+    connection = await DataCache.connection(user_id=user_id)
+    panel_url = connection.server.panel_url
+    traffic = await XuiAPI.get_subscription_userinfo(panel_url=panel_url)
+
+    return ClientTraffic(
+        up = traffic[0].up if traffic else 0,
+        down = traffic[0].down if traffic else 0,
+        total = (traffic[0].up if traffic else 0) + (traffic[0].down if traffic else 0)
+    )
+
+import asyncio
+t = asyncio.run(get_traffic(user_id='28ee569f-4a68-48c6-9464-135f93abfa78'))
+print(t)
