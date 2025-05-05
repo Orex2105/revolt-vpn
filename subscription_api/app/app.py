@@ -31,7 +31,7 @@ async def key_issuance(user_uuid: str):
             "subscription-userinfo":
                 f"upload={client_data.up}; download={client_data.down};"
                 f"total={client_data.limitation}; expire={client_data.expiry_time}",
-            "announce-url": sub_data.support_url,
+            "announce-url": sub_data.announce_url,
         }
         return PlainTextResponse(content=config_key, headers=headers)
 
