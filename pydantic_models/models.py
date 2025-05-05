@@ -4,7 +4,6 @@ from pydantic import BaseModel
 class XUICredentials(BaseModel):
     username: str
     password: str
-    emojis: list[str]
 
 
 class BotCredentials(BaseModel):
@@ -26,11 +25,13 @@ class ServerStatus(BaseModel):
     cpu_cores: int
 
 
-class SubscriptionCredentials(BaseModel):
+class SubscriptionsCredentials(BaseModel):
     profile_title: str
     support_url: str
     update_interval: str
     profile_web_page_url: str
+    announce_text: str
+    announce_url: str
 
 
 class ServerIsAlive(BaseModel):
@@ -38,7 +39,9 @@ class ServerIsAlive(BaseModel):
     last_check: str
 
 
-class ClientTraffic(BaseModel):
+class ClientSubData(BaseModel):
     up: int
     down: int
-    total: int
+    total_spent: int
+    limitation: int
+    expiry_time: int

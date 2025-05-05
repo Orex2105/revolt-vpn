@@ -1,7 +1,7 @@
 import os
 import dotenv
 from pathlib import Path
-from pydantic_models.models import XUICredentials, BotCredentials, SubscriptionCredentials
+from pydantic_models.models import XUICredentials, BotCredentials, SubscriptionsCredentials
 from aiogram import Bot
 
 
@@ -25,28 +25,30 @@ class SubscriptionData:
     SUB_SUPPORT_URL = os.getenv('SUB_SUPPORT_URL')
     SUB_UPDATE_INTERVAL = os.getenv('SUB_UPDATE_INTERVAL')
     PROFILE_WEB_PAGE_URL = os.getenv('PROFILE_WEB_PAGE_URL')
+    ANNOUNCE_TEXT = os.getenv('ANNOUNCE_TEXT')
+    ANNOUNCE_URL = os.getenv('ANNOUNCE_URL')
 
     @classmethod
-    def get_subscription_data(cls) -> SubscriptionCredentials:
-        return SubscriptionCredentials(
+    def get_subscription_data(cls) -> SubscriptionsCredentials:
+        return SubscriptionsCredentials(
             profile_title=cls.SUB_PROFILE_TITLE,
             support_url=cls.SUB_SUPPORT_URL,
             update_interval=cls.SUB_UPDATE_INTERVAL,
-            profile_web_page_url=cls.PROFILE_WEB_PAGE_URL
+            profile_web_page_url=cls.PROFILE_WEB_PAGE_URL,
+            announce_text=cls.ANNOUNCE_TEXT,
+            announce_url=cls.ANNOUNCE_URL
         )
 
 
 class XUISettings:
     XUI_USERNAME = os.getenv('XUI_USERNAME')
     XUI_PASSWORD = os.getenv('XUI_PASSWORD')
-    EMOJIS = ['🚀', '⭐️', '🌐', '👽', '🤠', '⚡️', '👾' '🔥', '🍌', '🤯', '⚙️']
 
     @classmethod
     def get_xui_data(cls) -> XUICredentials:
         return XUICredentials(
             username=cls.XUI_USERNAME,
             password=cls.XUI_PASSWORD,
-            emojis=cls.EMOJIS
         )
 
 

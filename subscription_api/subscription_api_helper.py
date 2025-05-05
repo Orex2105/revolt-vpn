@@ -1,6 +1,6 @@
 from typing import Union, Optional
 from uuid import UUID
-from pydantic_models.models import ClientTraffic
+from pydantic_models.models import ClientSubData
 from utils.cache import DataCache
 from xui.methods import XuiAPI
 import base64
@@ -41,15 +41,17 @@ class SubscriptionApiHelper:
 
 
     @staticmethod
-    async def get_traffic(user_id: Union[str, UUID]):
+    async def get_traffic(user_id: Union[str, UUID]) -> ClientSubData:
         connection = await DataCache.connection(user_id=user_id)
         panel_url = connection.server.panel_url
-        traffic = await XuiAPI.get_subscription_userinfo(user_id=user_id,panel_url=panel_url)
+        client_data = await XuiAPI.get_subscription_userinfo(user_id=user_id,panel_url=panel_url)
 
-        return ClientTraffic(
-            up = traffic[0].up if traffic else 0,
-            down = traffic[0].down if traffic else 0,
-            total = (traffic[0].up if traffic else 0) + (traffic[0].down if traffic else 0)
+        return ClientSubData(
+            up = client_data[0].up if client_data else 0,
+            down = client_data[0].down if client_data else 0,
+            total_spent = (client_data[0].up if client_data else 0) + (client_data[0].down if client_data else 0),
+            limitation = client_data[0].total if client_data else 0,
+            expiry_time = client_data[0].expiry_time if client_data else 0
         )
 
 
