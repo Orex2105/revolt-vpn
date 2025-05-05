@@ -26,6 +26,13 @@ class ServerStatus(BaseModel):
     cpu_cores: int
 
 
+class SubscriptionCredentials(BaseModel):
+    profile_title: str
+    support_url: str
+    update_interval: str
+    profile_web_page_url: str
+
+
 class ServerIsAlive(BaseModel):
     status: bool
     last_check: str

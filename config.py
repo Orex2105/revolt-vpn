@@ -1,7 +1,7 @@
 import os
 import dotenv
 from pathlib import Path
-from pydantic_models.models import XUICredentials, BotCredentials
+from pydantic_models.models import XUICredentials, BotCredentials, SubscriptionCredentials
 from aiogram import Bot
 
 
@@ -15,17 +15,31 @@ class DatabaseSettings:
     DB_PORT = os.getenv('DB_PORT')
     DB_NAME = os.getenv('DB_NAME')
 
-
     @classmethod
     def get_db_url(cls) -> str:
         return f'postgresql+asyncpg://{cls.DB_USER}:{cls.DB_PASSWORD}@{cls.DB_HOST}:{cls.DB_PORT}/{cls.DB_NAME}'
+
+
+class SubscriptionData:
+    SUB_PROFILE_TITLE = os.getenv('SUB_PROFILE_TITLE')
+    SUB_SUPPORT_URL = os.getenv('SUB_SUPPORT_URL')
+    SUB_UPDATE_INTERVAL = os.getenv('SUB_UPDATE_INTERVAL')
+    PROFILE_WEB_PAGE_URL = os.getenv('PROFILE_WEB_PAGE_URL')
+
+    @classmethod
+    def get_subscription_data(cls) -> SubscriptionCredentials:
+        return SubscriptionCredentials(
+            profile_title=cls.SUB_PROFILE_TITLE,
+            support_url=cls.SUB_SUPPORT_URL,
+            update_interval=cls.SUB_UPDATE_INTERVAL,
+            profile_web_page_url=cls.PROFILE_WEB_PAGE_URL
+        )
 
 
 class XUISettings:
     XUI_USERNAME = os.getenv('XUI_USERNAME')
     XUI_PASSWORD = os.getenv('XUI_PASSWORD')
     EMOJIS = ['🚀', '⭐️', '🌐', '👽', '🤠', '⚡️', '👾' '🔥', '🍌', '🤯', '⚙️']
-
 
     @classmethod
     def get_xui_data(cls) -> XUICredentials:
@@ -39,7 +53,6 @@ class XUISettings:
 class BotSettings:
     TOKEN = os.getenv("BOT_TOKEN")
     bot = Bot(TOKEN)
-
 
     @classmethod
     def get_token(cls) -> BotCredentials:
