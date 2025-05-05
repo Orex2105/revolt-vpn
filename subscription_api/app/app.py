@@ -18,6 +18,12 @@ async def key_issuance(user_uuid: str):
         if not update_last_seen_status:
             logger.error(f"Не удалось обновить поле last_seen для пользователя {user_uuid}")
 
-        return config_key
+        headers = {
+            "profile-title": "REVOLT VPN",
+            "support-url": "https://t.me/kellpython",
+            "profile-update-interval": "3",
+            "update-always": "true"
+        }
+        return PlainTextResponse(content=config_key, headers=headers)
 
     raise HTTPException(status_code=404, detail="Subscription not detected")
