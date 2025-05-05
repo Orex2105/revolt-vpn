@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
-@app.get('/connection/sub/{user_uuid}', response_class=PlainTextResponse)
+@app.api_route('/connection/sub/{user_uuid}', methods=["GET", "HEAD"], response_class=PlainTextResponse)
 async def key_issuance(user_uuid: str):
     config_key = await SubscriptionApiHelper.generate_config_key(user_id=user_uuid)
     sub_data = SubscriptionData.get_subscription_data()
