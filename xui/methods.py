@@ -124,6 +124,7 @@ class XuiAPI:
 
     @staticmethod
     @login
-    async def get_subscription_userinfo(panel_url: str,
+    async def get_subscription_userinfo(user_id: Union[str, UUID],
+                                        panel_url: str,
                                  xui_api: Optional[AsyncApi] = None):
-        return await xui_api.client.get_traffic_by_id('28ee569f-4a68-48c6-9464-135f93abfa78')
+        return await xui_api.client.get_traffic_by_id(client_uuid=user_id)
