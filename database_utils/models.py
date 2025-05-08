@@ -1,67 +1,62 @@
 from typing import Optional
-from sqlalchemy import TEXT, INTEGER, UUID, TIMESTAMP, BOOLEAN, func, ForeignKey, BigInteger
+from sqlalchemy import TEXT, INTEGER, TIMESTAMP, BOOLEAN, ForeignKey, BigInteger, func, Computed
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-import uuid
 from datetime import datetime
 from database_utils.database import Base
 
 
-class Users(Base):
+class User(Base):
     __tablename__ = "users"
 
-    user_id: Mapped[uuid.UUID] = mapped_column(UUID, primary_key=True)
-    tg_id: Mapped[int] = mapped_column(BigInteger, nullable=True, unique=True)
-    created_at: Mapped[datetime] = mapped_column(TIMESTAMP, default=func.now(), index=True)
-    expires_at: Mapped[Optional[datetime]] = mapped_column(TIMESTAMP, nullable=True, index=True)
-    is_active: Mapped[bool] = mapped_column(BOOLEAN, default=False, index=True)
-    was_ever_active: Mapped[bool] = mapped_column(BOOLEAN, default=False)
-    last_seen: Mapped[Optional[datetime]] = mapped_column(TIMESTAMP, nullable=True)
-    subscription_purchase_count: Mapped[int] = mapped_column(INTEGER, default=0)
-    notes: Mapped[Optional[str]] = mapped_column(TEXT, nullable=True)
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    telegram_id: Mapped[int] = mapped_column(BigInteger, unique=True, nullable=False, index=True)
+    created_at: Mapped[datetime] = mapped_column(TIMESTAMP, server_default=func.now())
 
-    # Связь с таблицей Connections
-    connections: Mapped["Connections"] = relationship("Connections",
-                                                      back_populates="user", lazy='joined')
-    admin: Mapped["Admins"] = relationship("Admins", back_populates="user", lazy='joined')
+    subscriptions: Mapped[list["Subscription"]] = relationship("Subscription",
+                                                               back_populates="user", lazy='joined')
+    admin: Mapped[Optional["Admin"]] = relationship("Admin", back_populates="user", lazy='joined')
 
 
-class Admins(Base):
+class Admin(Base):
     __tablename__ = 'admins'
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(TEXT, unique=True)
-    tg_id: Mapped[int] = mapped_column(ForeignKey("users.tg_id"))
+    telegram_id: Mapped[int] = mapped_column(ForeignKey("users.telegram_id"), index=True)
 
-    user: Mapped["Users"] = relationship("Users", back_populates="admin", lazy='joined')
+    user: Mapped["User"] = relationship("User", back_populates="admin", lazy='joined')
 
 
-class Servers(Base):
+class Subscription(Base):
+    __tablename__ = "subscriptions"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    telegram_id: Mapped[int] = mapped_column(ForeignKey("users.telegram_id", ondelete="CASCADE"), nullable=False, index=True)
+    start_date: Mapped[datetime] = mapped_column(TIMESTAMP, nullable=False)
+    end_date: Mapped[datetime] = mapped_column(TIMESTAMP, nullable=False, index=True)
+
+    user: Mapped["User"] = relationship("User", back_populates="subscriptions", lazy='joined')
+
+
+class Country(Base):
+    __tablename__ = "countries"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    name: Mapped[str] = mapped_column(TEXT, nullable=False)
+    code: Mapped[str] = mapped_column(TEXT, unique=True, nullable=False)
+
+    servers: Mapped[list["Server"]] = relationship("Server", back_populates="country", lazy='joined')
+
+
+class Server(Base):
     __tablename__ = "servers"
 
-    server_id: Mapped[uuid.UUID] = mapped_column(UUID, primary_key=True, default=uuid.uuid4)
-    location: Mapped[str] = mapped_column(TEXT)
-    address: Mapped[str] = mapped_column(TEXT)
-    port: Mapped[int] = mapped_column(INTEGER, default=443)
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    country_id: Mapped[int] = mapped_column(ForeignKey("countries.id", ondelete="CASCADE"), nullable=False)
+    ip_address: Mapped[str] = mapped_column(TEXT, nullable=False)
+    port: Mapped[int] = mapped_column(INTEGER, default=4443)
     panel_url: Mapped[str] = mapped_column(TEXT)
+    description: Mapped[Optional[str]] = mapped_column(TEXT)
+    is_active: Mapped[bool] = mapped_column(BOOLEAN, default=True, index=True)
 
-    # Связь с таблицей Connections
-    connections: Mapped[list["Connections"]] = relationship("Connections",
-                                                          back_populates="server", lazy='joined')
-
-
-class Connections(Base):
-    __tablename__ = 'connections'
-
-    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
-    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.user_id"), unique=True, index=True)
-    server_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("servers.server_id"), index=True)
-    flow: Mapped[str] = mapped_column(TEXT, default='xtls-rprx-vision')
-    tag: Mapped[str] = mapped_column(TEXT, default='REVOLT-VPN')
-    created_at: Mapped[datetime] = mapped_column(TIMESTAMP, default=func.now())
-    is_archived: Mapped[bool] = mapped_column(BOOLEAN, default=False, index=True)
-    archived_at: Mapped[Optional[datetime]] = mapped_column(TIMESTAMP, nullable=True, index=True)
-
-    # Связь с Users
-    user: Mapped["Users"] = relationship("Users", back_populates="connections", lazy='joined')
-    # Связь с Servers
-    server: Mapped["Servers"] = relationship("Servers", back_populates="connections", lazy='joined')
+    country: Mapped["Country"] = relationship("Country", back_populates="servers", lazy='joined')

@@ -4,10 +4,9 @@ from aiocache import cached, caches
 from aiogram.types import BufferedInputFile
 import qrcode
 import io
-from dao.select_methods_dao import get_all_admins, get_user_info, get_connection_info
+from dao.select_methods_dao import all_admins, user_info, subscription_info, all_servers
 from typing import Union, Optional
-from uuid import UUID, uuid5, NAMESPACE_DNS
-from database_utils.models import Users, Connections
+from database_utils.models import User, Subscription, Server
 from pydantic_models.models import ServerIsAlive
 from utils.ping import is_alive
 from xui.methods import XuiAPI
@@ -18,15 +17,11 @@ logger = logging.getLogger(__name__)
 class DataCache:
     admins_cache_ttl = 600
     users_cache_ttl = 60
-    connections_cache_ttl = 30
+    subscriptions_cache_ttl = 60
     server_status_cache_ttl = 300
+    servers_list_cache_ttl = 300
     xui_online_list_cache_ttl = 10
 
-
-    @staticmethod
-    @lru_cache(maxsize=100)
-    def uuid5_hashing(user_id: Union[str, UUID]) -> UUID:
-        return uuid5(NAMESPACE_DNS, str(user_id))
 
     @staticmethod
     @lru_cache(maxsize=100)
@@ -43,7 +38,17 @@ class DataCache:
     @cached(admins_cache_ttl)
     async def admins(cls) -> Optional[list[int]]:
         try:
-            return await get_all_admins()
+            return await all_admins()
+        except Exception as e:
+            logger.error(e)
+            return None
+
+
+    @classmethod
+    @cached(servers_list_cache_ttl)
+    async def servers(cls) -> Optional[list[Server]]:
+        try:
+            return await all_servers()
         except Exception as e:
             logger.error(e)
             return None
@@ -51,18 +56,18 @@ class DataCache:
 
     @classmethod
     @cached(users_cache_ttl)
-    async def user(cls, user_id: Union[str, UUID]) -> Optional[Users]:
+    async def user(cls, telegram_id: Union[str, int]) -> Optional[User]:
         try:
-            return await get_user_info(user_id=user_id)
+            return await user_info(telegram_id=int(telegram_id))
         except Exception as e:
             logger.error(e)
 
 
     @classmethod
-    @cached(connections_cache_ttl)
-    async def connection(cls, user_id: Union[str, UUID]) -> Optional[Connections]:
+    @cached(subscriptions_cache_ttl)
+    async def subscription(cls, telegram_id: Union[str, int]) -> Optional[Subscription]:
         try:
-            return await get_connection_info(user_id=user_id)
+            return await subscription_info(telegram_id=int(telegram_id))
         except Exception as e:
             logger.error(e)
 

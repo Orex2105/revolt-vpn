@@ -1,8 +1,6 @@
 from py3xui import AsyncApi, Client
 from utils.decorators.login import login
-from random import randint
 from typing import Optional, Union
-from config import XUISettings
 from uuid import UUID
 from time import time
 import logging

@@ -1,69 +1,80 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from dao.dao_classes import UsersDAO, AdminsDAO, ConnectionsDAO, ServersDAO
+from dao.dao_classes import UserDAO, AdminDAO, CountryDAO, ServerDAO, SubscriptionDAO
 from utils.decorators.connection import connection
-from database_utils.models import Users, Admins, Connections, Servers
-from typing import Union, Optional
-from uuid import UUID
+from database_utils.models import User, Admin, Country, Server, Subscription
+from typing import Optional
 
 
 @connection
-async def get_user_info(session: AsyncSession,
-                        user_id: Union[str, UUID]) ->  Optional[Users]:
+async def user_info(session: AsyncSession,
+                        telegram_id: int) ->  Optional[User]:
     """
     :param session: объект класса AsyncSession (создается декоратором)
-    :param user_id: str или UUID id пользователя
-    :return: объект класса Users или None
+    :param telegram_id: Telegram ID пользователя
+    :return: Optional[User]
     """
-    return await UsersDAO.get_user_info(session, user_id)
+    return await UserDAO.user_info(session=session, telegram_id=telegram_id)
 
 
 @connection
-async def get_admin_info(session: AsyncSession,
-                        tg_id: int) ->  Optional[Admins]:
-    """
-    :param session: объект класса AsyncSession (создается декоратором)
-    :param tg_id: str tg id пользователя
-    :return: объект класса Admins или None
-    """
-    return await AdminsDAO.get_admin_info(session, tg_id)
+async def subscription_info(session: AsyncSession, telegram_id: int) -> Optional[Subscription]:
+    return await SubscriptionDAO.subscription_info(session=session, telegram_id=telegram_id)
 
 
 @connection
-async def get_all_admins(session: AsyncSession) -> Optional[list[int]]:
+async def admin_info(session: AsyncSession,
+                        telegram_id: int) ->  Optional[Admin]:
     """
     :param session: объект класса AsyncSession (создается декоратором)
-    :return: список из int с тг id администраторов
+    :param telegram_id: Telegram ID пользователя
+    :return: Optional[Admin]
     """
-    return await AdminsDAO.get_all_admins(session)
+    return await AdminDAO.admin_info(session=session, telegram_id=telegram_id)
 
 
 @connection
-async def get_server_info(session: AsyncSession, location: Optional[str]=None,
-                          server_id: Union[str, UUID]=None) -> Optional[Servers]:
+async def all_admins(session: AsyncSession) -> Optional[list[int]]:
     """
     :param session: объект класса AsyncSession (создается декоратором)
-    :param location: название локации
-    :param server_id: uuid сервера
-    :return: объект класса Servers или None
+    :return: список Telegram ID администраторов
     """
-    return await ServersDAO.get_server_info(session, location, server_id)
+    return await AdminDAO.all_admins(session=session)
 
 
 @connection
-async def get_servers_locations(session: AsyncSession) -> Optional[list[str]]:
+async def server_info(session: AsyncSession,  server_id: int) -> Optional[Server]:
     """
     :param session: объект класса AsyncSession (создается декоратором)
-    :return: список локаций или None
+    :param server_id: id сервера
+    :return: Optional[Server]
     """
-    return await ServersDAO.get_servers_locations(session)
+    return await ServerDAO.server_info(session=session, server_id=server_id)
 
 
 @connection
-async def get_connection_info(session: AsyncSession,
-                              user_id: Union[str, UUID]) -> Optional[Connections]:
+async def all_servers(session: AsyncSession) -> Optional[list[Server]]:
     """
     :param session: объект класса AsyncSession (создается декоратором)
-    :param user_id: str или UUID id пользователя
-    :return: объект класса Connections или None
+    :return: список объектов класса Server
     """
-    return await ConnectionsDAO.get_connection_info(session, user_id)
+    return await ServerDAO.all_servers(session=session)
+
+
+@connection
+async def country_info(session: AsyncSession, country_id: int) -> Optional[Country]:
+    """
+
+    :param session: объект класса AsyncSession (создается декоратором)
+    :param country_id: ID страны
+    :return: Optional[Country]
+    """
+    return await CountryDAO.country_info(session=session, country_id=country_id)
+
+
+@connection
+async def all_countries(session: AsyncSession) -> Optional[list[Country]]:
+    """
+    :param session: объект класса AsyncSession (создается декоратором)
+    :return: список объектов класса Country
+    """
+    return await CountryDAO.all_countries(session=session)
