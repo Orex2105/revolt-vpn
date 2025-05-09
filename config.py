@@ -40,18 +40,6 @@ class SubscriptionData:
         )
 
 
-class XUISettings:
-    XUI_USERNAME = os.getenv('XUI_USERNAME')
-    XUI_PASSWORD = os.getenv('XUI_PASSWORD')
-
-    @classmethod
-    def get_xui_data(cls) -> XUICredentials:
-        return XUICredentials(
-            username=cls.XUI_USERNAME,
-            password=cls.XUI_PASSWORD,
-        )
-
-
 class BotSettings:
     TOKEN = os.getenv("BOT_TOKEN")
     bot = Bot(TOKEN)

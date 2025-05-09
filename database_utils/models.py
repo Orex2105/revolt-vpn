@@ -58,5 +58,8 @@ class Server(Base):
     panel_url: Mapped[str] = mapped_column(TEXT)
     description: Mapped[Optional[str]] = mapped_column(TEXT)
     is_active: Mapped[bool] = mapped_column(BOOLEAN, default=True, index=True)
+    inbound_id: Mapped[int] = mapped_column(INTEGER, default=1)
+    login: Mapped[str] = mapped_column(TEXT)
+    password: Mapped[str] = mapped_column(TEXT)
 
     country: Mapped["Country"] = relationship("Country", back_populates="servers", lazy='joined')

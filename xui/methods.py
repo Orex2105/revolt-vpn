@@ -15,6 +15,8 @@ class XuiAPI:
     async def add_new_client(user_tg_id: Union[str, int],
                              user_id: str,
                              panel_url: str,
+                             login: str,
+                             password: str,
                              subscription_duration: int,
                              inbound_id: int=1,
                              flow: str='xtls-rprx-vision',
@@ -25,6 +27,8 @@ class XuiAPI:
         :param user_tg_id: tg id пользователя
         :param user_id: uuid пользователя
         :param panel_url: url x-ui панели. Используется декоратором для авторизации
+        :param login: логин от панели 3x-ui
+        :param password: пароль от панели 3x-ui
         :param subscription_duration: длительность подписки (в днях). 0 - без ограничения
         :param inbound_id: id блока соединений
         :param flow: способ управления трафиком
@@ -55,6 +59,8 @@ class XuiAPI:
     @login
     async def get_connection_string(user_id: Union[str, UUID],
                                     panel_url: str,
+                                    login: str,
+                                    password: str,
                                     server_address: str,
                                     server_port: int,
                                     inbound_id: int=1,
@@ -63,6 +69,8 @@ class XuiAPI:
         """
         :param user_id: uuid пользователя
         :param panel_url: url x-ui панели. Используется декоратором для авторизации
+        :param login: логин от панели 3x-ui
+        :param password: пароль от панели 3x-ui
         :param server_address: ip сервера
         :param server_port: порт на сервере для подключения
         :param inbound_id: id блока соединений
@@ -94,6 +102,8 @@ class XuiAPI:
     @staticmethod
     @login
     async def get_server_status(panel_url: str,
+                                login: str,
+                                password: str,
                                 xui_api: Optional[AsyncApi]=None) -> ServerStatus:
 
         server_status = await xui_api.server.get_status()
@@ -117,6 +127,8 @@ class XuiAPI:
     @staticmethod
     @login
     async def get_online_clients(panel_url: str,
+                                 login: str,
+                                 password: str,
                                 xui_api: Optional[AsyncApi]=None) -> list[str]:
         return await xui_api.client.online()
 
@@ -125,5 +137,7 @@ class XuiAPI:
     @login
     async def get_subscription_userinfo(user_id: Union[str, UUID],
                                         panel_url: str,
+                                        login: str,
+                                        password: str,
                                  xui_api: Optional[AsyncApi] = None):
         return await xui_api.client.get_traffic_by_id(client_uuid=user_id)

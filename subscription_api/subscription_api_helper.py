@@ -8,7 +8,6 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-
 class SubscriptionApiHelper:
     @staticmethod
     async def generate_config_key(telegram_id: str) -> Optional[list[str]]:
@@ -23,15 +22,21 @@ class SubscriptionApiHelper:
 
             for server in servers:
                 panel_url = server.panel_url
+                login = server.login
+                password = server.password
                 address = server.ip_address
                 port = server.port
                 tag = server.country.name
+                inbound_id = server.inbound_id
 
                 vless_key = await XuiAPI.get_connection_string(user_id=telegram_id,
                                                                server_address=address,
                                                                server_port=port,
                                                                tag=tag,
-                                                               panel_url=panel_url)
+                                                               panel_url=panel_url,
+                                                               login=login,
+                                                               password=password,
+                                                               inbound_id=inbound_id)
                 if vless_key is not None:
                     config.append(vless_key)
             return config
@@ -52,7 +57,10 @@ class SubscriptionApiHelper:
 
         for server in servers:
             panel_url = server.panel_url
-            client_data = await XuiAPI.get_subscription_userinfo(user_id=telegram_id, panel_url=panel_url)
+            login = server.login
+            password = server.password
+            client_data = await XuiAPI.get_subscription_userinfo(user_id=telegram_id, panel_url=panel_url,
+                                                                 password=password, login=login)
 
             up += client_data[0].up if client_data else 0
             down += client_data[0].down if client_data else 0
