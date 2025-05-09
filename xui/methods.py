@@ -1,7 +1,6 @@
 from py3xui import AsyncApi, Client
 from utils.decorators.login import login
 from typing import Optional, Union
-from uuid import UUID
 from time import time
 import logging
 from pydantic_models.models import ServerStatus
@@ -57,7 +56,7 @@ class XuiAPI:
 
     @staticmethod
     @login
-    async def get_connection_string(user_id: Union[str, UUID],
+    async def get_connection_string(telegram_id: Union[str, int],
                                     panel_url: str,
                                     login: str,
                                     password: str,
@@ -67,7 +66,7 @@ class XuiAPI:
                                     tag: Optional[str]=None,
                                     xui_api: Optional[AsyncApi]=None) -> Optional[str]:
         """
-        :param user_id: uuid пользователя
+        :param telegram_id: Telegram id пользователя
         :param panel_url: url x-ui панели. Используется декоратором для авторизации
         :param login: логин от панели 3x-ui
         :param password: пароль от панели 3x-ui
@@ -81,18 +80,22 @@ class XuiAPI:
         try:
             inbound = await xui_api.inbound.get_by_id(inbound_id)
 
-            reality_settings = inbound.stream_settings.reality_settings
-            public_key = reality_settings["settings"]["publicKey"]
-            website_name = reality_settings["serverNames"][0]
-            short_id = reality_settings["shortIds"][0]
-            flow = reality_settings.get("flow", "xtls-rprx-vision")
+            if await xui_api.client.get_traffic_by_id(telegram_id):
 
-            connection_string = (
-                f"vless://{user_id}@{server_address}:{server_port}"
-                f"?type=tcp&security=reality&pbk={public_key}&fp=random&sni={website_name}"
-                f"&sid={short_id}&spx=%2F&flow={flow}#{tag if tag else ''}"
-            )
-            return connection_string
+                reality_settings = inbound.stream_settings.reality_settings
+                public_key = reality_settings["settings"]["publicKey"]
+                website_name = reality_settings["serverNames"][0]
+                short_id = reality_settings["shortIds"][0]
+                flow = reality_settings.get("flow", "xtls-rprx-vision")
+
+                connection_string = (
+                    f"vless://{telegram_id}@{server_address}:{server_port}"
+                    f"?type=tcp&security=reality&pbk={public_key}&fp=random&sni={website_name}"
+                    f"&sid={short_id}&spx=%2F&flow={flow}#{tag if tag else ''}"
+                )
+                return connection_string
+            else:
+                return None
 
         except Exception as e:
             logger.error(f"{panel_url}: {str(e)}")
@@ -135,7 +138,7 @@ class XuiAPI:
 
     @staticmethod
     @login
-    async def get_subscription_userinfo(user_id: Union[str, UUID],
+    async def get_subscription_userinfo(user_id: Union[str, int],
                                         panel_url: str,
                                         login: str,
                                         password: str,
