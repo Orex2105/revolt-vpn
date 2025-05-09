@@ -29,7 +29,7 @@ class SubscriptionApiHelper:
                 tag = server.country.name
                 inbound_id = server.inbound_id
 
-                vless_key = await XuiAPI.get_connection_string(user_id=telegram_id,
+                vless_key = await XuiAPI.get_connection_string(telegram_id=telegram_id,
                                                                server_address=address,
                                                                server_port=port,
                                                                tag=tag,
