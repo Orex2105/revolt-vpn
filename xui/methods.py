@@ -73,10 +73,11 @@ class XuiAPI:
         try:
             inbound = await xui_api.inbound.get_by_id(inbound_id)
 
-            public_key = inbound.stream_settings.reality_settings["settings"]["publicKey"]
-            website_name = inbound.stream_settings.reality_settings["serverNames"][0]
-            short_id = inbound.stream_settings.reality_settings["shortIds"][0]
-            flow = inbound.stream_settings.reality_settings.get("flow", "xtls-rprx-vision")
+            reality_settings = inbound.stream_settings.reality_settings
+            public_key = reality_settings["settings"]["publicKey"]
+            website_name = reality_settings["serverNames"][0]
+            short_id = reality_settings["shortIds"][0]
+            flow = reality_settings.get("flow", "xtls-rprx-vision")
 
             connection_string = (
                 f"vless://{user_id}@{server_address}:{server_port}"
@@ -86,7 +87,7 @@ class XuiAPI:
             return connection_string
 
         except Exception as e:
-            logger.error(e)
+            logger.error(f"{panel_url}: {str(e)}")
             return None
 
 

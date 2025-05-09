@@ -32,7 +32,8 @@ class SubscriptionApiHelper:
                                                                server_port=port,
                                                                tag=tag,
                                                                panel_url=panel_url)
-                config.append(vless_key)
+                if vless_key is not None:
+                    config.append(vless_key)
             return config
         except Exception as e:
             logger.error(e)
