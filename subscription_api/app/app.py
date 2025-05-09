@@ -26,6 +26,8 @@ async def key_issuance(telegram_id: str):
                 f"total={client_data.limitation}; expire={client_data.expiry_time}",
             "announce-url": sub_data.announce_url,
         }
-        return PlainTextResponse(content="\n".join(config_key), headers=headers)
+
+        content = '\n'.join(config_key)
+        return PlainTextResponse(content=content, headers=headers)
 
     raise HTTPException(status_code=404, detail="Subscription not detected")
