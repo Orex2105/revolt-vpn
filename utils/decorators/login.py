@@ -9,7 +9,7 @@ def login(method):
         panel_url = kwargs.get('panel_url')
         login = kwargs.get('login')
         password = kwargs.get('password')
-        if not panel_url or login or password:
+        if not panel_url:
             raise ValueError("Недостаточно данных для подключения к панели")
         try:
             xui_api = AsyncApi(
