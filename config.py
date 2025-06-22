@@ -1,8 +1,9 @@
 import os
 import dotenv
 from pathlib import Path
-from pydantic_models.models import XUICredentials, BotCredentials, SubscriptionsCredentials
+from pydantic_models.models import BotCredentials, SubscriptionsCredentials
 from aiogram import Bot
+from logging import DEBUG, INFO, WARNING, ERROR, CRITICAL
 
 
 dotenv.load_dotenv(Path(__file__).parent / "config.env")
@@ -49,3 +50,25 @@ class BotSettings:
         return BotCredentials(
             token=cls.TOKEN,
         )
+
+
+class LogSettings:
+    LOG_DIR_NAME = os.getenv('LOG_DIR_NAME')
+    LOG_FILE_NAME = os.getenv('LOG_FILE_NAME')
+    MAX_LOG_SIZE = int(os.getenv('MAX_LOG_SIZE'))
+    BACKUP_COUNT = int(os.getenv('BACKUP_COUNT'))
+
+    log_format_ = os.getenv('LOG_FORMAT')
+    if log_format_ == 'default':
+        LOG_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    else:
+        LOG_FORMAT = log_format_
+
+    log_level_ = os.getenv('LOG_LEVEL')
+    match log_level_:
+        case 'debug': LOG_LEVEL = DEBUG
+        case 'info': LOG_LEVEL = INFO
+        case 'warning': LOG_LEVEL = WARNING
+        case 'error': LOG_LEVEL = ERROR
+        case 'critical': LOG_LEVEL = CRITICAL
+        case _: LOG_LEVEL = INFO

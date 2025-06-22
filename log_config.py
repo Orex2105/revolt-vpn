@@ -1,25 +1,22 @@
 import logging
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
+from config import LogSettings
 
-LOG_LEVEL = logging.ERROR
-LOG_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-LOG_DIR = Path("logs")
-LOG_FILE = LOG_DIR/"logs.log"
-MAX_LOG_SIZE = 5*1024*1024
-BACKUP_COUNT = 2
-
+BASE_DIR = Path(__file__).parent
+LOG_DIR = BASE_DIR / LogSettings.LOG_DIR_NAME
+LOG_FILE = LOG_DIR / LogSettings.LOG_FILE_NAME
 LOG_DIR.mkdir(exist_ok=True)
 
 def setup_logging():
     logging.basicConfig(
-        level=LOG_LEVEL,
-        format=LOG_FORMAT,
+        level = LogSettings.LOG_LEVEL,
+        format = LogSettings.LOG_FORMAT,
         handlers=[
             RotatingFileHandler(
                 filename=LOG_FILE,
-                maxBytes=MAX_LOG_SIZE,
-                backupCount=BACKUP_COUNT,
+                maxBytes=LogSettings.MAX_LOG_SIZE,
+                backupCount=LogSettings.BACKUP_COUNT,
                 encoding="utf-8"
             )
         ]

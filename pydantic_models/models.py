@@ -1,6 +1,5 @@
 from pydantic import BaseModel
 
-
 class XUICredentials(BaseModel):
     username: str
     password: str
