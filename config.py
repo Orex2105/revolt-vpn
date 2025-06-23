@@ -1,33 +1,31 @@
 import os
-import dotenv
 from pathlib import Path
+from configparser import ConfigParser
 from pydantic_models.models import BotCredentials, SubscriptionsCredentials
 from aiogram import Bot
 from logging import DEBUG, INFO, WARNING, ERROR, CRITICAL
 
-
-dotenv.load_dotenv(Path(__file__).parent / "config.env")
-
+config = ConfigParser()
+config.read(Path(__file__).parent / "config.ini", encoding='utf-8')
 
 class DatabaseSettings:
-    DB_USER = os.getenv('DB_USER')
-    DB_PASSWORD = os.getenv('DB_PASSWORD')
-    DB_HOST = os.getenv('DB_HOST')
-    DB_PORT = os.getenv('DB_PORT')
-    DB_NAME = os.getenv('DB_NAME')
+    DB_USER = config.get('database', 'DB_USER')
+    DB_PASSWORD = config.get('database', 'DB_PASSWORD')
+    DB_HOST = config.get('database', 'DB_HOST')
+    DB_PORT = config.get('database', 'DB_PORT')
+    DB_NAME = config.get('database', 'DB_NAME')
 
     @classmethod
     def get_db_url(cls) -> str:
         return f'postgresql+asyncpg://{cls.DB_USER}:{cls.DB_PASSWORD}@{cls.DB_HOST}:{cls.DB_PORT}/{cls.DB_NAME}'
 
-
 class SubscriptionData:
-    SUB_PROFILE_TITLE = os.getenv('SUB_PROFILE_TITLE')
-    SUB_SUPPORT_URL = os.getenv('SUB_SUPPORT_URL')
-    SUB_UPDATE_INTERVAL = os.getenv('SUB_UPDATE_INTERVAL')
-    PROFILE_WEB_PAGE_URL = os.getenv('PROFILE_WEB_PAGE_URL')
-    ANNOUNCE_TEXT = os.getenv('ANNOUNCE_TEXT')
-    ANNOUNCE_URL = os.getenv('ANNOUNCE_URL')
+    SUB_PROFILE_TITLE = config.get('subscription_api', 'PROFILE_TITLE')
+    SUB_SUPPORT_URL = config.get('subscription_api', 'SUPPORT_URL')
+    SUB_UPDATE_INTERVAL = config.get('subscription_api', 'UPDATE_INTERVAL')
+    PROFILE_WEB_PAGE_URL = config.get('subscription_api', 'PROFILE_WEB_PAGE_URL')
+    ANNOUNCE_TEXT = config.get('subscription_api', 'ANNOUNCE_TEXT')
+    ANNOUNCE_URL = config.get('subscription_api', 'ANNOUNCE_URL')
 
     @classmethod
     def get_subscription_data(cls) -> SubscriptionsCredentials:
@@ -40,9 +38,9 @@ class SubscriptionData:
             announce_url=cls.ANNOUNCE_URL
         )
 
-
 class BotSettings:
-    TOKEN = os.getenv("BOT_TOKEN")
+    TOKEN = config.get('bot', 'TOKEN')
+    BOT_SUPPORT_INFORMATION = config.get('bot', 'SUPPORT_INFORMATION')
     bot = Bot(TOKEN)
 
     @classmethod
@@ -51,20 +49,19 @@ class BotSettings:
             token=cls.TOKEN,
         )
 
-
 class LogSettings:
-    LOG_DIR_NAME = os.getenv('LOG_DIR_NAME')
-    LOG_FILE_NAME = os.getenv('LOG_FILE_NAME')
-    MAX_LOG_SIZE = int(os.getenv('MAX_LOG_SIZE'))
-    BACKUP_COUNT = int(os.getenv('BACKUP_COUNT'))
+    LOG_DIR_NAME = config.get('logging', 'DIR_NAME')
+    LOG_FILE_NAME = config.get('logging', 'FILE_NAME')
+    MAX_LOG_SIZE = config.getint('logging', 'MAX_SIZE')
+    BACKUP_COUNT = config.getint('logging', 'BACKUP_COUNT')
 
-    log_format_ = os.getenv('LOG_FORMAT')
+    log_format_ = config.get('logging', 'FORMAT')
     if log_format_ == 'default':
         LOG_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     else:
         LOG_FORMAT = log_format_
 
-    log_level_ = os.getenv('LOG_LEVEL')
+    log_level_ = config.get('logging', 'LEVEL')
     match log_level_:
         case 'debug': LOG_LEVEL = DEBUG
         case 'info': LOG_LEVEL = INFO

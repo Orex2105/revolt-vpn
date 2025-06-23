@@ -1,13 +1,14 @@
 from aiogram import Router, types, F
 from aiogram.filters import CommandStart
 from aiogram.utils.chat_action import ChatActionSender
-from urllib.parse import urlparse
 from telegram_bot.inline_keyboards.command_start import command_start_inline_keyboard
 from telegram_bot.inline_keyboards.key_settings_panel import key_settings_panel
 from config import BotSettings
 from utils.cache import DataCache
 from utils.greeting import set_greeting
+from subscription_api.subscription_api_helper import SubscriptionApiHelper
 import logging
+from datetime import datetime
 
 bot = BotSettings.bot
 logger = logging.getLogger(__name__)
@@ -27,31 +28,21 @@ async def key_settings(callback: types.CallbackQuery):
     user_id = callback.message.chat.id
 
     async with ChatActionSender.typing(bot=bot, chat_id=user_id, interval=1):
-        connection = await DataCache.connection(user_id=DataCache.uuid5_hashing(str(user_id)))
-
-        panel_url = connection.server.panel_url
-        url = urlparse(panel_url)
-        host = url.hostname
-        port = url.port
-
-        server_alive = await DataCache.server_status(host=host, port=port)
-        status = '🟢' if server_alive.status else '🔴'
-        last_check = server_alive.last_check
-
-        key_url = f'https://anarchyproxy.online/connection/sub/{connection.user_id}'
-
-        online = await DataCache.server_users_online(panel_url)
-        users_online = len(online) if len(online) > 0 else 1
-        load = round(50/users_online)
-        load_emoji = '⚠️' if load >= 50 else '📊'
-
         keyboard = await key_settings_panel()
-        await callback.message.edit_text(f'🌎 <b>Локация</b>: {connection.server.location}\n'
-                                         f'📡 <b>Доступность</b>: {status} | '
-                                         f'<span class="tg-spoiler">проверено в {last_check}</span>\n'
-                                         f'{load_emoji} Нагрузка на сервер: {load} %\n\n'
-                                         f'<code>{key_url}</code>', parse_mode='html',
-                                         reply_markup=keyboard.as_markup())
+
+        traffic = await SubscriptionApiHelper.get_traffic(str(user_id))
+        traffic_total_spent = round(traffic.total_spent / (1024**3*2), 2)
+        traffic_limitation_ = traffic.limitation
+        traffic_limitation = round(traffic_limitation_ / (1024 ** 3 * 2), 2) if traffic_limitation_ != 0 else "♾️"
+
+        subscription = await DataCache.subscription(telegram_id=user_id)
+        end_date_ = datetime.strptime(str(subscription.end_date), "%Y-%m-%d %H:%M:%S.%f")
+        end_date = end_date_.strftime("%Y-%m-%d %H:%M")
+        await callback.message.edit_text(f'🔑 <b>ID ключа</b>: <code>{user_id}</code>\n'
+                                         f'📡 <b>Потрачено трафика</b>: {traffic_total_spent} ГБ / {traffic_limitation} ГБ\n'
+                                         f'⏰ <b>Действует до</b> {end_date}',
+                                         reply_markup=keyboard.as_markup(),
+                                         parse_mode='html')
 
 
 @common_router.callback_query(F.data == 'back')
@@ -65,10 +56,15 @@ async def back_to_previous_menu(callback: types.CallbackQuery):
 @common_router.callback_query(F.data == 'qr')
 async def qr_code(callback: types.CallbackQuery):
     user_id = callback.message.chat.id
-    connection = await DataCache.connection(user_id=DataCache.uuid5_hashing(str(user_id)))
-    data = f'https://anarchyproxy.online/connection/sub/{connection.user_id}'
+    data = f'https://anarchyproxy.online/connection/sub/{user_id}'
 
     input_file = DataCache.qr(data=data)
 
     await callback.answer()
-    await callback.message.answer_photo(photo=input_file)
+    await callback.message.answer_photo(photo=input_file, caption='Отсканируйте в приложении, чтобы подключиться')
+
+
+@common_router.callback_query(F.data == 'support')
+async def support_information(callback: types.CallbackQuery):
+    await callback.answer()
+    await callback.message.answer(BotSettings.BOT_SUPPORT_INFORMATION, parse_mode='html')

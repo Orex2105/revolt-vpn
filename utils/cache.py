@@ -89,13 +89,3 @@ class DataCache:
     @staticmethod
     async def cache_cleaner() -> None:
         await caches.get("default").clear()
-
-
-    @classmethod
-    @cached(xui_online_list_cache_ttl)
-    async def server_users_online(cls, panel_url) -> list[str]:
-        try:
-            return await XuiAPI.get_online_clients(panel_url=panel_url)
-        except Exception as e:
-            logger.error(e)
-            return []

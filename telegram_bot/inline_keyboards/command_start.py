@@ -7,7 +7,8 @@ from utils.cache import DataCache
 @inline_keyboard_builder
 async def command_start_inline_keyboard(user_tg_id: Union[str, int],
                                         builder: InlineKeyboardBuilder) -> InlineKeyboardBuilder:
-    admins_list = await DataCache.admins() if await DataCache.admins() else []
+    admins_list_ = await DataCache.admins()
+    admins_list = admins_list_ if admins_list_ else []
 
     if user_tg_id in admins_list:
         builder.row(InlineKeyboardButton(
@@ -15,8 +16,7 @@ async def command_start_inline_keyboard(user_tg_id: Union[str, int],
             callback_data="admin_panel"
         ))
 
-    user_id = DataCache.uuid5_hashing(str(user_tg_id))
-    user_info = await DataCache.connection(user_id=user_id)
+    user_info = await DataCache.subscription(telegram_id=user_tg_id)
 
     if user_info is not None:
         builder.row(InlineKeyboardButton(text='⚙️ Мой ключ', callback_data="key_settings"))
