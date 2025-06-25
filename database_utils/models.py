@@ -1,5 +1,5 @@
 from typing import Optional
-from sqlalchemy import TEXT, INTEGER, TIMESTAMP, BOOLEAN, ForeignKey, BigInteger, func, Computed
+from sqlalchemy import TEXT, INTEGER, TIMESTAMP, BOOLEAN, ForeignKey, BigInteger, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import datetime
 from database_utils.database import Base

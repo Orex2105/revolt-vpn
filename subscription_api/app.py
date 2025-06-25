@@ -1,20 +1,20 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import PlainTextResponse
 from subscription_api.subscription_api_helper import SubscriptionApiHelper
-from config import SubscriptionData
+from config import SubscriptionApiData
 import logging
 
 logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
-@app.api_route('/connection/sub/{telegram_id}', methods=["GET", "HEAD"], response_class=PlainTextResponse)
+@app.api_route(SubscriptionApiData.WEB_PATH+'{telegram_id}', methods=["GET", "HEAD"], response_class=PlainTextResponse)
 async def key_issuance(telegram_id: str):
     config_key = await SubscriptionApiHelper.generate_config_key(telegram_id=telegram_id)
 
     if config_key is not None:
         client_data = await SubscriptionApiHelper.get_traffic(telegram_id=telegram_id)
-        sub_data = SubscriptionData.get_subscription_data()
+        sub_data = SubscriptionApiData.get_subscription_data()
         headers = {
             "profile-web-page-url": sub_data.profile_web_page_url,
             "profile-title": sub_data.profile_title,

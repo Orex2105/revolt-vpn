@@ -19,13 +19,15 @@ class DatabaseSettings:
     def get_db_url(cls) -> str:
         return f'postgresql+asyncpg://{cls.DB_USER}:{cls.DB_PASSWORD}@{cls.DB_HOST}:{cls.DB_PORT}/{cls.DB_NAME}'
 
-class SubscriptionData:
+class SubscriptionApiData:
     SUB_PROFILE_TITLE = config.get('subscription_api', 'PROFILE_TITLE')
     SUB_SUPPORT_URL = config.get('subscription_api', 'SUPPORT_URL')
     SUB_UPDATE_INTERVAL = config.get('subscription_api', 'UPDATE_INTERVAL')
     PROFILE_WEB_PAGE_URL = config.get('subscription_api', 'PROFILE_WEB_PAGE_URL')
     ANNOUNCE_TEXT = config.get('subscription_api', 'ANNOUNCE_TEXT')
     ANNOUNCE_URL = config.get('subscription_api', 'ANNOUNCE_URL')
+    WEB_PATH = config.get('subscription_api', 'WEB_PATH')
+    DOMAIN = config.get('subscription_api', 'DOMAIN')
 
     @classmethod
     def get_subscription_data(cls) -> SubscriptionsCredentials:
@@ -41,6 +43,7 @@ class SubscriptionData:
 class BotSettings:
     TOKEN = config.get('bot', 'TOKEN')
     SUPPORT_URL = config.get('bot', 'SUPPORT_URL')
+    INFORMATION_BLOCK = config.get('bot', 'INFORMATION_BLOCK')
     bot = Bot(TOKEN)
 
     @classmethod
