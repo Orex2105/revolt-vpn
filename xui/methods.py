@@ -143,4 +143,8 @@ class XuiAPI:
                                         login: str,
                                         password: str,
                                  xui_api: Optional[AsyncApi] = None):
-        return await xui_api.client.get_traffic_by_id(client_uuid=user_id)
+        try:
+            return await xui_api.client.get_traffic_by_id(client_uuid=user_id)
+        except Exception as e:
+            logger.error(e)
+            return None

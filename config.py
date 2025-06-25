@@ -40,7 +40,7 @@ class SubscriptionData:
 
 class BotSettings:
     TOKEN = config.get('bot', 'TOKEN')
-    BOT_SUPPORT_INFORMATION = config.get('bot', 'SUPPORT_INFORMATION')
+    SUPPORT_URL = config.get('bot', 'SUPPORT_URL')
     bot = Bot(TOKEN)
 
     @classmethod

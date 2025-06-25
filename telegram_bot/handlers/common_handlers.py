@@ -61,10 +61,4 @@ async def qr_code(callback: types.CallbackQuery):
     input_file = DataCache.qr(data=data)
 
     await callback.answer()
-    await callback.message.answer_photo(photo=input_file, caption='Отсканируйте в приложении, чтобы подключиться')
-
-
-@common_router.callback_query(F.data == 'support')
-async def support_information(callback: types.CallbackQuery):
-    await callback.answer()
-    await callback.message.answer(BotSettings.BOT_SUPPORT_INFORMATION, parse_mode='html')
+    await callback.message.answer_photo(photo=input_file, caption='Отсканируй в приложении, чтобы подключиться')

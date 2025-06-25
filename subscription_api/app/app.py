@@ -33,4 +33,4 @@ async def key_issuance(telegram_id: str):
         else:
             HTTPException(status_code=404, detail="Error")
 
-    raise HTTPException(status_code=404, detail="Subscription not detected")
+    return HTTPException(status_code=404, detail="Subscription not detected")
