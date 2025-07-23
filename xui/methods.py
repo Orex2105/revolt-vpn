@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 class XuiAPI:
     @staticmethod
     @login
-    async def add_new_client(user_tg_id: Union[str, int],
+    async def add_new_client(email: Union[str, int],
                              user_id: str,
                              panel_url: str,
                              login: str,
@@ -23,8 +23,8 @@ class XuiAPI:
                              xui_api: Optional[AsyncApi]=None
                              ) -> None:
         """
-        :param user_tg_id: tg id пользователя
-        :param user_id: uuid пользователя
+        :param email: email пользователя
+        :param user_id: id пользователя
         :param panel_url: url x-ui панели. Используется декоратором для авторизации
         :param login: логин от панели 3x-ui
         :param password: пароль от панели 3x-ui
@@ -43,7 +43,7 @@ class XuiAPI:
 
             new_client = Client(
                 id=user_id,
-                email=str(user_tg_id),
+                email=str(email),
                 flow=flow,
                 limit_ip=limit_ip,
                 enable=True,

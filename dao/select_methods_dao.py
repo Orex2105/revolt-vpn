@@ -3,6 +3,7 @@ from dao.dao_classes import UserDAO, AdminDAO, CountryDAO, ServerDAO, Subscripti
 from utils.decorators.connection import connection
 from database_utils.models import User, Admin, Country, Server, Subscription
 from typing import Optional
+from sqlalchemy import select, func
 
 
 @connection
@@ -63,7 +64,6 @@ async def all_servers(session: AsyncSession) -> Optional[list[Server]]:
 @connection
 async def country_info(session: AsyncSession, country_id: int) -> Optional[Country]:
     """
-
     :param session: объект класса AsyncSession (создается декоратором)
     :param country_id: ID страны
     :return: Optional[Country]
@@ -78,3 +78,17 @@ async def all_countries(session: AsyncSession) -> Optional[list[Country]]:
     :return: список объектов класса Country
     """
     return await CountryDAO.all_countries(session=session)
+
+
+@connection
+async def get_next_id_users(session: AsyncSession):
+    result = await session.execute(select(func.max(User.id)))
+    max_id = result.scalar()
+    return (max_id or 0) + 1
+
+
+@connection
+async def get_next_id_subscriptions(session: AsyncSession):
+    result = await session.execute(select(func.max(Subscription.id)))
+    max_id = result.scalar()
+    return (max_id or 0) + 1

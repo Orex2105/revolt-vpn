@@ -1,4 +1,4 @@
-import os
+import json
 from pathlib import Path
 from configparser import ConfigParser
 from pydantic_models.models import BotCredentials, SubscriptionsCredentials
@@ -44,6 +44,7 @@ class BotSettings:
     TOKEN = config.get('bot', 'TOKEN')
     SUPPORT_URL = config.get('bot', 'SUPPORT_URL')
     INFORMATION_BLOCK = config.get('bot', 'INFORMATION_BLOCK')
+    admins = json.loads(config['bot']['ADMINS'])
     bot = Bot(TOKEN)
 
     @classmethod

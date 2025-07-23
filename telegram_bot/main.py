@@ -1,13 +1,14 @@
 from aiogram import Dispatcher
 from config import BotSettings
 from telegram_bot.handlers.common_handlers import common_router
+from telegram_bot.handlers.admin_handlers import admin_router
 from log_config import setup_logging
 from utils.cache import DataCache
 import asyncio
 
 
 dp = Dispatcher()
-dp.include_router(common_router)
+dp.include_routers(common_router, admin_router)
 bot = BotSettings.bot
 
 

@@ -17,3 +17,11 @@ async def qr_inline_keyboard(builder: InlineKeyboardBuilder) -> InlineKeyboardBu
     delete_button = InlineKeyboardButton(text='👀 Скрыть QR-код', callback_data='del_qr')
     builder.row(delete_button)
     return builder
+
+
+@inline_keyboard_builder
+async def yn_panel(builder: InlineKeyboardBuilder) -> InlineKeyboardBuilder:
+    yes_button = InlineKeyboardButton(text='✅ Да', callback_data='yes')
+    no_button = InlineKeyboardButton(text='❌ Нет', callback_data='no')
+    builder.add(yes_button, no_button)
+    return builder

@@ -4,6 +4,7 @@ from utils.decorators.connection import connection
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional
 from datetime import datetime, timedelta
+from dao.select_methods_dao import get_next_id_subscriptions, get_next_id_users
 import logging
 
 logger = logging.getLogger(__name__)
@@ -17,10 +18,10 @@ async def add_user(session: AsyncSession,
     :return: Optional[User]
     """
     try:
-
         new_user = await UserDAO.add(
             session=session,
             telegram_id=telegram_id,
+            id=await get_next_id_users()
         )
         return new_user
 
@@ -102,6 +103,7 @@ async def add_subscription(session: AsyncSession,
 
         new_subscription = await SubscriptionDAO.add(
             session=session,
+            id=await get_next_id_subscriptions(),
             telegram_id=telegram_id,
             start_date=start_date,
             end_date=end_date
