@@ -24,5 +24,6 @@ async def command_start_inline_keyboard(user_tg_id: Union[str, int],
 
     builder.row(InlineKeyboardButton(text='ℹ️ Информация', callback_data='info'),
                 InlineKeyboardButton(text='👤 Поддержка', callback_data='support', url=BotSettings.SUPPORT_URL))
+    builder.row(InlineKeyboardButton(text='‼️ Важное', callback_data='important'))
 
     return builder

@@ -44,6 +44,7 @@ class BotSettings:
     TOKEN = config.get('bot', 'TOKEN')
     SUPPORT_URL = config.get('bot', 'SUPPORT_URL')
     INFORMATION_BLOCK = config.get('bot', 'INFORMATION_BLOCK')
+    IMPORTANT_TEXT = config.get('bot', 'IMPORTANT_TEXT').replace('\\n', '\n')
     admins = json.loads(config['bot']['ADMINS'])
     bot = Bot(TOKEN)
 

@@ -78,3 +78,10 @@ async def information(callback: types.CallbackQuery):
     keyboard = await only_back_button_inline_keyboard()
     await callback.message.edit_text(BotSettings.INFORMATION_BLOCK, reply_markup=keyboard.as_markup())
     await callback.answer()
+
+
+@common_router.callback_query(F.data == 'important')
+async def important_button(callback: types.CallbackQuery):
+    keyboard = await only_back_button_inline_keyboard()
+    await callback.message.edit_text(BotSettings.IMPORTANT_TEXT, parse_mode='html', reply_markup=keyboard.as_markup())
+    await callback.answer()

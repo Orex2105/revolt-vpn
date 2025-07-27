@@ -25,3 +25,10 @@ async def yn_panel(builder: InlineKeyboardBuilder) -> InlineKeyboardBuilder:
     no_button = InlineKeyboardButton(text='❌ Нет', callback_data='no')
     builder.add(yes_button, no_button)
     return builder
+
+
+@inline_keyboard_builder
+async def cancel_button(builder: InlineKeyboardBuilder) -> InlineKeyboardBuilder:
+    cancel_btn = InlineKeyboardButton(text='❌ Отмена', callback_data='cancel_fsm')
+    builder.row(cancel_btn)
+    return builder

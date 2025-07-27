@@ -1,12 +1,10 @@
-from gc import set_debug
-
 from aiogram import Router, F, types
 from aiogram.filters import StateFilter
 from aiogram.fsm.context import FSMContext
 from telegram_bot.filters import IsAdminFilter
 from telegram_bot.inline_keyboards.admin_panel import admin_panel_inline_keyboard
 from telegram_bot.FSM.admin_fsm import AddUserForm
-from telegram_bot.common_keyboard import yn_panel
+from telegram_bot.common_keyboard import yn_panel, cancel_button
 from dao.add_methods_dao import add_user, add_subscription
 from dao.select_methods_dao import all_servers
 from xui.methods import XuiAPI
@@ -22,14 +20,17 @@ async def main_panel(callback: types.CallbackQuery):
 
 @admin_router.callback_query(F.data == 'add_user', StateFilter(None), IsAdminFilter())
 async def set_name(callback: types.CallbackQuery, state: FSMContext):
-    await callback.message.answer("Как зовут нового пользователя?")
+    keyboard = await cancel_button()
+    await callback.message.answer("Как зовут нового пользователя?", reply_markup=keyboard.as_markup())
+    await callback.answer()
     await state.set_state(AddUserForm.user_name)
 
 
 @admin_router.message(AddUserForm.user_name)
 async def set_id(message: types.Message, state: FSMContext):
     await state.update_data(user_name=message.text)
-    await message.answer("Какой у пользователя id в телеграме?")
+    keyboard = await cancel_button()
+    await message.answer("Какой у пользователя id в телеграме?", reply_markup=keyboard.as_markup())
     await state.set_state(AddUserForm.user_id)
 
 
@@ -43,6 +44,7 @@ async def need_subscription_y(callback: types.CallbackQuery, state: FSMContext):
 
 @admin_router.callback_query(AddUserForm.need_subscription, F.data == 'no')
 async def need_subscription_y(callback: types.CallbackQuery, state: FSMContext):
+    await callback.answer()
     await state.update_data(need_subscription='False')
     await callback.message.delete()
     await state.clear()
@@ -86,3 +88,10 @@ async def try_add_user(message: types.Message, state: FSMContext):
         await state.set_state(AddUserForm.need_subscription)
     except Exception as e:
         await message.answer(f'Не удалось добавить пользователя:\n<code>{e}</code>', parse_mode='html')
+
+
+@admin_router.callback_query(F.data == 'cancel_fsm')
+async def cancel_add_user(callback: types.CallbackQuery, state: FSMContext):
+    await state.clear()
+    await callback.message.delete()
+    await callback.answer('Действие отменено')
