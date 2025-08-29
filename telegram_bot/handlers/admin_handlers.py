@@ -72,7 +72,7 @@ async def need_subscription_y(message: types.Message, state: FSMContext):
 
     await message.answer("Подписка добавлена")
     subscription_key_url = F"https://{SubscriptionApiData.DOMAIN}{SubscriptionApiData.WEB_PATH}"
-    await message.answer(f"Ключ: <code>{subscription_key_url}{user_add_id}</code>")
+    await message.answer(f"Ключ: <code>{subscription_key_url}{user_add_id}</code>", parse_mode = 'html')
     await state.clear()
 
 
