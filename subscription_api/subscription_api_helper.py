@@ -28,6 +28,10 @@ class SubscriptionApiHelper:
                 port = server.port
                 tag = server.country.name
                 inbound_id = server.inbound_id
+                server_is_active = server.is_active
+
+                if not server_is_active:
+                    continue
 
                 vless_key = await XuiAPI.get_connection_string(telegram_id=telegram_id,
                                                                server_address=address,

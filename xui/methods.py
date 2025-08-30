@@ -4,10 +4,8 @@ from typing import Optional, Union
 from time import time
 import logging
 from pydantic_models.models import ServerStatus
-from config import SubscriptionApiData
 
 logger = logging.getLogger(__name__)
-
 
 class XuiAPI:
     @staticmethod
@@ -88,12 +86,11 @@ class XuiAPI:
                 website_name = reality_settings["serverNames"][0]
                 short_id = reality_settings["shortIds"][0]
                 flow = reality_settings.get("flow", "xtls-rprx-vision")
-                mldsa65 = SubscriptionApiData.mldsa65
 
                 connection_string = (
                     f"vless://{telegram_id}@{server_address}:{server_port}"
                     f"?type=tcp&security=reality&pbk={public_key}&fp=random&sni={website_name}"
-                    f"&sid={short_id}&spx=%2F&flow={flow}&pqv={mldsa65}#{tag if tag else ''}"
+                    f"&sid={short_id}&spx=%2F&flow={flow}#{tag if tag else ''}"
                 )
                 return connection_string
             else:
