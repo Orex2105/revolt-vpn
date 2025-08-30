@@ -74,3 +74,12 @@ class LogSettings:
         case 'error': LOG_LEVEL = ERROR
         case 'critical': LOG_LEVEL = CRITICAL
         case _: LOG_LEVEL = INFO
+
+
+class CacheTtlSettings:
+    ADMINS_CACHE_TTL = config.getint('cache', 'ADMINS_CACHE_TTL')
+    USERS_CACHE_TTL = config.getint('cache', 'USERS_CACHE_TTL')
+    SUBSCRIPTIONS_CACHE_TTL = config.getint('cache', 'SUBSCRIPTIONS_CACHE_TTL')
+    SERVER_STATUS_CACHE_TTL = config.getint('cache', 'SERVER_STATUS_CACHE_TTL')
+    SERVERS_LIST_CACHE_TTL = config.getint('cache', 'SERVERS_LIST_CACHE_TTL')
+    XUI_ONLINE_LIST_CACHE_TTL = config.getint('cache', 'XUI_ONLINE_LIST_CACHE_TTL')

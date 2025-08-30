@@ -4,23 +4,23 @@ from aiocache import cached, caches
 from aiogram.types import BufferedInputFile
 import qrcode
 import io
+from config import CacheTtlSettings
 from dao.select_methods_dao import all_admins, user_info, subscription_info, all_servers
 from typing import Union, Optional
 from database_utils.models import User, Subscription, Server
 from pydantic_models.models import ServerIsAlive
 from utils.ping import is_alive
-from xui.methods import XuiAPI
 
 logger = logging.getLogger(__name__)
 
 
 class DataCache:
-    admins_cache_ttl = 600
-    users_cache_ttl = 60
-    subscriptions_cache_ttl = 60
-    server_status_cache_ttl = 300
-    servers_list_cache_ttl = 300
-    xui_online_list_cache_ttl = 10
+    admins_cache_ttl = CacheTtlSettings.ADMINS_CACHE_TTL
+    users_cache_ttl = CacheTtlSettings.USERS_CACHE_TTL
+    subscriptions_cache_ttl = CacheTtlSettings.SUBSCRIPTIONS_CACHE_TTL
+    server_status_cache_ttl = CacheTtlSettings.SERVER_STATUS_CACHE_TTL
+    servers_list_cache_ttl = CacheTtlSettings.SERVERS_LIST_CACHE_TTL
+    xui_online_list_cache_ttl = CacheTtlSettings.XUI_ONLINE_LIST_CACHE_TTL
 
 
     @staticmethod
