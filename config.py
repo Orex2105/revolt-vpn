@@ -1,4 +1,4 @@
-import json
+import ast
 from pathlib import Path
 from configparser import ConfigParser
 from pydantic_models.models import BotCredentials, SubscriptionsCredentials
@@ -45,8 +45,12 @@ class BotSettings:
     SUPPORT_URL = config.get('bot', 'SUPPORT_URL')
     INFORMATION_BLOCK = config.get('bot', 'INFORMATION_BLOCK')
     IMPORTANT_TEXT = config.get('bot', 'IMPORTANT_TEXT').replace('\\n', '\n')
-    admins = json.loads(config['bot']['ADMINS'])
     bot = Bot(TOKEN)
+    admins_str = config.get('bot', 'ADMINS', fallback='[]')
+    try:
+        ADMINS = ast.literal_eval(admins_str)
+    except (ValueError, SyntaxError):
+        ADMINS = []
 
     @classmethod
     def get_token(cls) -> BotCredentials:
@@ -60,7 +64,7 @@ class LogSettings:
     MAX_LOG_SIZE = config.getint('logging', 'MAX_SIZE')
     BACKUP_COUNT = config.getint('logging', 'BACKUP_COUNT')
 
-    log_format_ = config.get('logging', 'FORMAT')
+    log_format_ = config.get('logging', 'FORMAT', fallback='default')
     if log_format_ == 'default':
         LOG_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     else:
