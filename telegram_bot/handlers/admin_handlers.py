@@ -8,6 +8,7 @@ from telegram_bot.common_keyboard import yn_panel, cancel_button
 from dao.add_methods_dao import add_user, add_subscription
 from dao.select_methods_dao import all_servers
 from xui.methods import XuiAPI
+from config import SubscriptionApiData
 
 admin_router = Router()
 
@@ -70,6 +71,8 @@ async def need_subscription_y(message: types.Message, state: FSMContext):
     await add_subscription(telegram_id=int(user_add_id), duration_days=duration)
 
     await message.answer("Подписка добавлена")
+    subscription_key_url = F"https://{SubscriptionApiData.DOMAIN}{SubscriptionApiData.WEB_PATH}"
+    await message.answer(f"Ключ: <code>{subscription_key_url}{user_add_id}</code>", parse_mode='html')
     await state.clear()
 
 
