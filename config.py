@@ -3,6 +3,7 @@ from configparser import ConfigParser
 from pydantic_models.models import BotCredentials, SubscriptionsCredentials
 from aiogram import Bot
 from logging import DEBUG, INFO, WARNING, ERROR, CRITICAL
+import ast
 
 config = ConfigParser()
 config.read(Path(__file__).parent / "config.ini", encoding='utf-8')
@@ -45,6 +46,12 @@ class BotSettings:
     INFORMATION_BLOCK = config.get('bot', 'INFORMATION_BLOCK')
     IMPORTANT_TEXT = config.get('bot', 'IMPORTANT_TEXT').replace('\\n', '\n')
     bot = Bot(TOKEN)
+
+    admins_str = config.get('bot', 'ADMINS', fallback='[]')
+    try:
+        ADMINS = ast.literal_eval(admins_str)
+    except (ValueError, SyntaxError):
+        ADMINS = []
 
     @classmethod
     def get_token(cls) -> BotCredentials:
