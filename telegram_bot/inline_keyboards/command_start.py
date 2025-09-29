@@ -3,6 +3,9 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder, InlineKeyboardButton
 from utils.decorators.inline_keyboard_builder import inline_keyboard_builder
 from utils.cache import DataCache
 from config import BotSettings
+from LoggerFactory import logger_factory
+
+logger = logger_factory.create_logger(name='tg.CommandStartKeyboard')
 
 
 @inline_keyboard_builder

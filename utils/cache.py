@@ -1,4 +1,3 @@
-import logging
 from functools import lru_cache
 from aiocache import cached, caches
 from aiogram.types import BufferedInputFile
@@ -9,9 +8,9 @@ from typing import Union, Optional
 from database_utils.models import User, Subscription, Server
 from pydantic_models.models import ServerIsAlive
 from utils.ping import is_alive
-from xui.methods import XuiAPI
+from LoggerFactory import logger_factory
 
-logger = logging.getLogger(__name__)
+logger = logger_factory.create_logger(name='utils.Cache')
 
 
 class DataCache:

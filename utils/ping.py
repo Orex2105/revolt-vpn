@@ -1,9 +1,10 @@
 import asyncio
 from pydantic_models.models import ServerIsAlive
-import logging
 from datetime import datetime
+from LoggerFactory import logger_factory
 
-logger = logging.getLogger(__name__)
+logger = logger_factory.create_logger(name='utils.Ping')
+
 
 async def is_alive(host: str, port: int, timeout: float = 1.0) -> ServerIsAlive:
     current_time = datetime.now().strftime("%H:%M")

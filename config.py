@@ -1,4 +1,3 @@
-import ast
 from pathlib import Path
 from configparser import ConfigParser
 from pydantic_models.models import BotCredentials, SubscriptionsCredentials
@@ -46,11 +45,6 @@ class BotSettings:
     INFORMATION_BLOCK = config.get('bot', 'INFORMATION_BLOCK')
     IMPORTANT_TEXT = config.get('bot', 'IMPORTANT_TEXT').replace('\\n', '\n')
     bot = Bot(TOKEN)
-    admins_str = config.get('bot', 'ADMINS', fallback='[]')
-    try:
-        ADMINS = ast.literal_eval(admins_str)
-    except (ValueError, SyntaxError):
-        ADMINS = []
 
     @classmethod
     def get_token(cls) -> BotCredentials:
@@ -59,22 +53,21 @@ class BotSettings:
         )
 
 class LogSettings:
-    LOG_DIR_NAME = config.get('logging', 'DIR_NAME')
-    LOG_FILE_NAME = config.get('logging', 'FILE_NAME')
-    MAX_LOG_SIZE = config.getint('logging', 'MAX_SIZE')
+    DIR_NAME = config.get('logging', 'DIR_NAME')
+    MAX_SIZE = config.getint('logging', 'MAX_SIZE')
     BACKUP_COUNT = config.getint('logging', 'BACKUP_COUNT')
 
-    log_format_ = config.get('logging', 'FORMAT', fallback='default')
-    if log_format_ == 'default':
-        LOG_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    format_ = config.get('logging', 'FORMAT', fallback='default')
+    if format_ == 'default':
+        FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     else:
-        LOG_FORMAT = log_format_
+        FORMAT = format_
 
-    log_level_ = config.get('logging', 'LEVEL')
-    match log_level_:
-        case 'debug': LOG_LEVEL = DEBUG
-        case 'info': LOG_LEVEL = INFO
-        case 'warning': LOG_LEVEL = WARNING
-        case 'error': LOG_LEVEL = ERROR
-        case 'critical': LOG_LEVEL = CRITICAL
-        case _: LOG_LEVEL = INFO
+    level_ = config.get('logging', 'LEVEL')
+    match level_:
+        case 'debug': LEVEL = DEBUG
+        case 'info': LEVEL = INFO
+        case 'warning': LEVEL = WARNING
+        case 'error': LEVEL = ERROR
+        case 'critical': LEVEL = CRITICAL
+        case _: LEVEL = INFO

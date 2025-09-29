@@ -4,6 +4,9 @@ from utils.decorators.connection import connection
 from database_utils.models import User, Admin, Country, Server, Subscription
 from typing import Optional
 from sqlalchemy import select, func
+from LoggerFactory import logger_factory
+
+logger = logger_factory.create_logger(name='db.SelectDao')
 
 
 @connection

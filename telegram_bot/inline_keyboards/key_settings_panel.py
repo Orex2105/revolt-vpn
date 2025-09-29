@@ -1,6 +1,9 @@
 from aiogram.utils.keyboard import InlineKeyboardBuilder, InlineKeyboardButton
 from utils.decorators.inline_keyboard_builder import inline_keyboard_builder
 from telegram_bot.common_keyboard import back_button
+from LoggerFactory import logger_factory
+
+logger = logger_factory.create_logger(name='tg.KeySettingsPanelKeyboard')
 
 
 @inline_keyboard_builder

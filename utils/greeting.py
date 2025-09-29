@@ -1,4 +1,8 @@
 import datetime
+from LoggerFactory import logger_factory
+
+logger = logger_factory.create_logger(name='utils.Greeting')
+
 
 def set_greeting() -> str:
     hour_now = datetime.datetime.now().hour

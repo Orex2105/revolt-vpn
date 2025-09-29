@@ -4,9 +4,10 @@ from utils.cache import DataCache
 from datetime import datetime
 from xui.methods import XuiAPI
 import base64
-import logging
+from LoggerFactory import logger_factory
 
-logger = logging.getLogger(__name__)
+logger = logger_factory.create_logger(name='web.SubApiHelper')
+
 
 class SubscriptionApiHelper:
     @staticmethod

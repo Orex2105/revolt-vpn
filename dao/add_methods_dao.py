@@ -5,9 +5,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional
 from datetime import datetime, timedelta
 from dao.select_methods_dao import get_next_id_subscriptions, get_next_id_users
-import logging
+from LoggerFactory import logger_factory
 
-logger = logging.getLogger(__name__)
+logger = logger_factory.create_logger(name='db.AddDao')
 
 @connection
 async def add_user(session: AsyncSession,

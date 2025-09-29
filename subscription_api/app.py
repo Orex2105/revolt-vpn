@@ -2,11 +2,11 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import PlainTextResponse
 from subscription_api.subscription_api_helper import SubscriptionApiHelper
 from config import SubscriptionApiData
-import logging
+from LoggerFactory import logger_factory
 
-logger = logging.getLogger(__name__)
-
+logger = logger_factory.create_logger(name='web.App')
 app = FastAPI()
+
 
 @app.api_route(SubscriptionApiData.WEB_PATH+'{telegram_id}', methods=["GET", "HEAD"], response_class=PlainTextResponse)
 async def key_issuance(telegram_id: str):

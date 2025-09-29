@@ -8,13 +8,14 @@ from config import BotSettings, SubscriptionApiData
 from utils.cache import DataCache
 from utils.greeting import set_greeting
 from subscription_api.subscription_api_helper import SubscriptionApiHelper
-import logging
 from datetime import datetime
+from LoggerFactory import logger_factory
+
+logger = logger_factory.create_logger(name='tg.CommonHandler')
 
 bot = BotSettings.bot
-logger = logging.getLogger(__name__)
-
 common_router = Router()
+
 
 @common_router.message(CommandStart())
 async def command_start(message: types.Message):

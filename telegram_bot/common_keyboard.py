@@ -1,5 +1,9 @@
 from aiogram.utils.keyboard import InlineKeyboardButton, InlineKeyboardBuilder
 from utils.decorators.inline_keyboard_builder import inline_keyboard_builder
+from LoggerFactory import logger_factory
+
+logger = logger_factory.create_logger(name='tg.CommonKeyboard')
+
 
 async def back_button() -> InlineKeyboardButton:
     return InlineKeyboardButton(text="⬅️ Назад", callback_data="back")

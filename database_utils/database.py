@@ -2,16 +2,15 @@ from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncAttrs, async_sessionmaker, create_async_engine, AsyncEngine
 from config import DatabaseSettings
-import logging
+from LoggerFactory import logger_factory
 
-logger = logging.getLogger(__name__)
+logger = logger_factory.create_logger(name='db.add')
 
 DATABASE_URL = DatabaseSettings.get_db_url()
 engine = create_async_engine(DATABASE_URL)
 async_session_maker = async_sessionmaker(engine, expire_on_commit=False)
 
 
-# Базовый класс для всех моделей
 class Base(AsyncAttrs, DeclarativeBase):
     __abstract__ = True
 

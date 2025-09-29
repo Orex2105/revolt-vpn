@@ -3,6 +3,9 @@ from sqlalchemy import TEXT, INTEGER, TIMESTAMP, BOOLEAN, ForeignKey, BigInteger
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import datetime
 from database_utils.database import Base
+from LoggerFactory import logger_factory
+
+logger = logger_factory.create_logger(name='db.TableModels')
 
 
 class User(Base):

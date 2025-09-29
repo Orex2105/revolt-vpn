@@ -1,12 +1,11 @@
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
-import logging
+from LoggerFactory import logger_factory
 
-logger = logging.getLogger(__name__)
+logger = logger_factory.create_logger(name='db.BaseDao')
 
 
 class BaseDAO:
-
     """Базовый класс для Data Access Object-классов, которые
     будут создаваться для каждой таблицы"""
 

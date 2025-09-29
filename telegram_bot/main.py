@@ -2,9 +2,11 @@ from aiogram import Dispatcher
 from config import BotSettings
 from telegram_bot.handlers.common_handlers import common_router
 from telegram_bot.handlers.admin_handlers import admin_router
-from log_config import setup_logging
 from utils.cache import DataCache
 import asyncio
+from LoggerFactory import logger_factory
+
+logger = logger_factory.create_logger(name='tg.Main')
 
 
 dp = Dispatcher()
@@ -13,7 +15,6 @@ bot = BotSettings.bot
 
 
 async def main() -> None:
-    setup_logging()
     await DataCache.startup_cache()
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)

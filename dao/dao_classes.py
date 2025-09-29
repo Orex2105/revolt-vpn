@@ -3,9 +3,9 @@ from database_utils.models import User, Subscription, Country, Server, Admin
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from typing import Optional
-import logging
+from LoggerFactory import logger_factory
 
-logger = logging.getLogger(__name__)
+logger = logger_factory.create_logger(name='db.DaoClasses')
 
 
 class UserDAO(BaseDAO):

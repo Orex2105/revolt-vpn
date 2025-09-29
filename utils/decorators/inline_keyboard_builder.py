@@ -1,7 +1,8 @@
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-import logging
+from LoggerFactory import logger_factory
 
-logger = logging.getLogger(__name__)
+logger = logger_factory.create_logger(name='utils.decorators.InlineKeyboardBuilder')
+
 
 def inline_keyboard_builder(func):
     async def wrapper(*args, **kwargs):

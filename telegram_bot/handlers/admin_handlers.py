@@ -8,8 +8,11 @@ from telegram_bot.common_keyboard import yn_panel, cancel_button
 from dao.add_methods_dao import add_user, add_subscription
 from dao.select_methods_dao import all_servers
 from xui.methods import XuiAPI
+from LoggerFactory import logger_factory
 
+logger = logger_factory.create_logger(name='tg.AdminHandler')
 admin_router = Router()
+
 
 @admin_router.callback_query(F.data == 'admin_panel', IsAdminFilter())
 async def main_panel(callback: types.CallbackQuery):

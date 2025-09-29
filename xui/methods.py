@@ -2,10 +2,10 @@ from py3xui import AsyncApi, Client
 from utils.decorators.login import login
 from typing import Optional, Union
 from time import time
-import logging
 from pydantic_models.models import ServerStatus
+from LoggerFactory import logger_factory
 
-logger = logging.getLogger(__name__)
+logger = logger_factory.create_logger(name='xui.methods')
 
 
 class XuiAPI:
