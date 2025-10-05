@@ -84,9 +84,9 @@ class XuiAPI:
                 import random
                 reality_settings = inbound.stream_settings.reality_settings
                 public_key = reality_settings["settings"]["publicKey"]
-                random_website_name_index = random.randint(0, len(reality_settings["serverNames"]))
+                random_website_name_index = random.randint(0, len(reality_settings["serverNames"])-1)
                 website_name = reality_settings["serverNames"][random_website_name_index]
-                random_short_id_index = random.randint(0, len(reality_settings["shortIds"]))
+                random_short_id_index = random.randint(0, len(reality_settings["shortIds"])-1)
                 short_id = reality_settings["shortIds"][random_short_id_index]
                 fingerprint = reality_settings['settings']['fingerprint']
                 flow = reality_settings.get("flow", "xtls-rprx-vision")
