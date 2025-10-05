@@ -81,16 +81,19 @@ class XuiAPI:
             inbound = await xui_api.inbound.get_by_id(inbound_id)
 
             if await xui_api.client.get_traffic_by_id(telegram_id):
-
+                import random
                 reality_settings = inbound.stream_settings.reality_settings
                 public_key = reality_settings["settings"]["publicKey"]
-                website_name = reality_settings["serverNames"][0]
-                short_id = reality_settings["shortIds"][0]
+                random_website_name_index = random.randint(0, len(reality_settings["serverNames"]))
+                website_name = reality_settings["serverNames"][random_website_name_index]
+                random_short_id_index = random.randint(0, len(reality_settings["shortIds"]))
+                short_id = reality_settings["shortIds"][random_short_id_index]
+                fingerprint = reality_settings['settings']['fingerprint']
                 flow = reality_settings.get("flow", "xtls-rprx-vision")
 
                 connection_string = (
                     f"vless://{telegram_id}@{server_address}:{server_port}"
-                    f"?type=tcp&security=reality&pbk={public_key}&fp=random&sni={website_name}"
+                    f"?type=tcp&security=reality&pbk={public_key}&fp={fingerprint}&sni={website_name}"
                     f"&sid={short_id}&spx=%2F&flow={flow}#{tag if tag else ''}"
                 )
                 return connection_string
