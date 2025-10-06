@@ -59,17 +59,18 @@ class SubscriptionApiHelper:
             expiry_time = 0
 
             for server in servers:
-                panel_url = server.panel_url
-                login = server.login
-                password = server.password
-                client_data = await XuiAPI.get_subscription_userinfo(user_id=telegram_id, panel_url=panel_url,
-                                                                     password=password, login=login)
+                if server.is_active:
+                    panel_url = server.panel_url
+                    login = server.login
+                    password = server.password
+                    client_data = await XuiAPI.get_subscription_userinfo(user_id=telegram_id, panel_url=panel_url,
+                                                                         password=password, login=login)
 
-                up += client_data[0].up if client_data else 0
-                down += client_data[0].down if client_data else 0
-                total_spent += up + down
-                limitation = client_data[0].total if client_data else 0
-                expiry_time = client_data[0].expiry_time if client_data else 0
+                    up += client_data[0].up if client_data else 0
+                    down += client_data[0].down if client_data else 0
+                    total_spent += up + down
+                    limitation = client_data[0].total if client_data else 0
+                    expiry_time = client_data[0].expiry_time if client_data else 0
 
             return ClientSubData(
                 up = up,
