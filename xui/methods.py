@@ -78,16 +78,15 @@ class XuiAPI:
         :return: строка подключения или None
         """
         try:
-            inbound = await xui_api.inbound.get_by_id(inbound_id)
+            if xui_api is not None:
+                inbound = await xui_api.inbound.get_by_id(inbound_id)
 
-            if await xui_api.client.get_traffic_by_id(telegram_id):
                 import random
                 reality_settings = inbound.stream_settings.reality_settings
                 public_key = reality_settings["settings"]["publicKey"]
                 random_website_name_index = random.randint(0, len(reality_settings["serverNames"])-1)
                 website_name = reality_settings["serverNames"][random_website_name_index]
-                random_short_id_index = random.randint(0, len(reality_settings["shortIds"])-1)
-                short_id = reality_settings["shortIds"][random_short_id_index]
+                short_id = reality_settings["shortIds"][0]
                 fingerprint = reality_settings['settings']['fingerprint']
                 flow = reality_settings.get("flow", "xtls-rprx-vision")
 
