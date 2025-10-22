@@ -9,6 +9,7 @@ from dao.add_methods_dao import add_user, add_subscription
 from dao.select_methods_dao import all_servers
 from xui.methods import XuiAPI
 from LoggerFactory import logger_factory
+from config import SubscriptionApiData
 
 logger = logger_factory.create_logger(name='tg.AdminHandler')
 admin_router = Router()
@@ -73,6 +74,9 @@ async def need_subscription_y(message: types.Message, state: FSMContext):
     await add_subscription(telegram_id=int(user_add_id), duration_days=duration)
 
     await message.answer("Подписка добавлена")
+    domain = SubscriptionApiData.DOMAIN
+    url = SubscriptionApiData.WEB_PATH
+    await message.answer(f"<code>{domain}{url}{user_add_id}</code>", parse_mode='html')
     await state.clear()
 
 
