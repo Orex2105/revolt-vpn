@@ -76,7 +76,7 @@ async def need_subscription_y(message: types.Message, state: FSMContext):
     await message.answer("Подписка добавлена")
     domain = SubscriptionApiData.DOMAIN
     url = SubscriptionApiData.WEB_PATH
-    await message.answer(f"<code>{domain}{url}{user_add_id}</code>", parse_mode='html')
+    await message.answer(f"<code>https://{domain}{url}{user_add_id}</code>", parse_mode='html')
     await state.clear()
 
 
