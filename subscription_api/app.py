@@ -31,6 +31,6 @@ async def key_issuance(telegram_id: str):
         if content is not None:
             return PlainTextResponse(content=content, headers=headers)
         else:
-            HTTPException(status_code=404, detail="Error")
+            raise HTTPException(status_code=404, detail="Error")
 
-    return HTTPException(status_code=404, detail="Subscription not detected")
+    raise HTTPException(status_code=404, detail="Subscription not detected")

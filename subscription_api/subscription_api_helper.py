@@ -48,7 +48,7 @@ class SubscriptionApiHelper:
 
 
     @staticmethod
-    async def get_traffic(telegram_id: str) -> Optional[ClientSubData]:
+    async def get_traffic(telegram_id: str) -> ClientSubData:
         try:
             servers = await DataCache.servers()
 
@@ -81,7 +81,13 @@ class SubscriptionApiHelper:
             )
         except Exception as e:
             logger.error(e)
-            return None
+            return ClientSubData(
+                up = 0,
+                down = 0,
+                total_spent = 0,
+                limitation = 0,
+                expiry_time = 0
+            )
 
 
     @staticmethod
