@@ -88,12 +88,12 @@ class XuiAPI:
                 website_name = reality_settings["serverNames"][random_website_name_index]
                 short_id = reality_settings["shortIds"][0]
                 fingerprint = reality_settings['settings']['fingerprint']
-                flow = reality_settings.get("flow", "xtls-rprx-vision")
+                #flow = reality_settings.get("flow", "xtls-rprx-vision")
 
                 connection_string = (
                     f"vless://{telegram_id}@{server_address}:{server_port}"
                     f"?type=xhttp&encryption=none&path=%2F&host=&mode=auto&security=reality&pbk={public_key}&fp={fingerprint}&sni={website_name}"
-                    f"&sid={short_id}&spx=%2F&flow={flow}#{tag if tag else ''}"
+                    f"&sid={short_id}&spx=%2F#{tag if tag else ''}"
                 )
                 return connection_string
             else:
