@@ -41,7 +41,7 @@ async def key_settings(callback: types.CallbackQuery):
         subscription = await DataCache.subscription(telegram_id=user_id)
         end_date_ = datetime.strptime(str(subscription.end_date), "%Y-%m-%d %H:%M:%S.%f")
         end_date = end_date_.strftime("%Y-%m-%d %H:%M")
-        await callback.message.edit_text(f'🔑 <b>ID ключа</b>: <code>{key_url}</code>\n'
+        await callback.message.edit_text(f'🔑 <b>Ключ</b>: <code>{key_url}</code>\n'
                                          f'📡 <b>Потрачено трафика</b>: {traffic_total_spent} ГБ / {traffic_limitation} ГБ\n'
                                          f'⏰ <b>Действует до</b> {end_date}',
                                          reply_markup=keyboard.as_markup(),
