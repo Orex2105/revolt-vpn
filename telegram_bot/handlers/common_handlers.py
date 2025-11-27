@@ -36,7 +36,7 @@ async def key_settings(callback: types.CallbackQuery):
         traffic_total_spent = round(traffic.total_spent / (1024**3), 2)
         traffic_limitation_ = traffic.limitation
         traffic_limitation = round(traffic_limitation_ / (1024 ** 3), 2) if traffic_limitation_ != 0 else "♾️"
-        key_url = SubscriptionApiData.DOMAIN + SubscriptionApiData.WEB_PATH + str(user_id)
+        key_url = 'https://' + SubscriptionApiData.DOMAIN + SubscriptionApiData.WEB_PATH + str(user_id)
 
         subscription = await DataCache.subscription(telegram_id=user_id)
         end_date_ = datetime.strptime(str(subscription.end_date), "%Y-%m-%d %H:%M:%S.%f")
