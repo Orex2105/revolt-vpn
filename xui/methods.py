@@ -92,7 +92,7 @@ class XuiAPI:
 
                 connection_string = (
                     f"vless://{telegram_id}@{server_address}:{server_port}"
-                    f"?type=xhttp&encryption=none&path=%2F&host=&mode=auto&security=reality&pbk={public_key}&fp={fingerprint}&sni={website_name}"
+                    f"?type=xhttp&encryption=none&path=%2F&host=&mode=stream-up&security=reality&pbk={public_key}&fp={fingerprint}&sni={website_name}"
                     f"&sid={short_id}&spx=%2F#{tag if tag else ''}"
                 )
                 return connection_string
