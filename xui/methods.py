@@ -64,6 +64,7 @@ class XuiAPI:
                                     server_port: int,
                                     inbound_id: int=1,
                                     tag: Optional[str]=None,
+                                    description: Optional[str]=None,
                                     xui_api: Optional[AsyncApi]=None) -> Optional[str]:
         """
         :param telegram_id: Telegram id пользователя
@@ -90,11 +91,20 @@ class XuiAPI:
                 fingerprint = reality_settings['settings']['fingerprint']
                 #flow = reality_settings.get("flow", "xtls-rprx-vision")
 
-                connection_string = (
-                    f"vless://{telegram_id}@{server_address}:{server_port}"
-                    f"?type=xhttp&encryption=none&path=%2F&host=&mode=stream-up&security=reality&pbk={public_key}&fp={fingerprint}&sni={website_name}"
-                    f"&sid={short_id}&spx=%2F#{tag if tag else ''}"
-                )
+                if description == 'XHTTP':
+                    connection_string = (
+                        f"vless://{telegram_id}@{server_address}:{server_port}"
+                        f"?type=xhttp&encryption=none&path=%2F&host=&mode=stream-up&security=reality&pbk={public_key}&fp={fingerprint}&sni={website_name}"
+                        f"&sid={short_id}&spx=%2F#{tag if tag else ''}"
+                    )
+                elif description == 'TCP':
+                    connection_string = (
+                        f"vless://{telegram_id}@{server_address}:{server_port}"
+                        f"?type=tcp&encryption=none&security=reality&pbk={public_key}&fp={fingerprint}&sni={website_name}"
+                        f"&sid={short_id}&spx=%2F#{tag if tag else ''}"
+                    )
+                else:
+                    connection_string = ''
                 return connection_string
             else:
                 return None

@@ -28,6 +28,7 @@ class SubscriptionApiHelper:
                     password = server.password
                     address = server.ip_address
                     port = server.port
+                    description = server.description
                     tag = server.country.name
                     inbound_id = server.inbound_id
 
@@ -35,6 +36,7 @@ class SubscriptionApiHelper:
                                                                    server_address=address,
                                                                    server_port=port,
                                                                    tag=tag,
+                                                                   description=description,
                                                                    panel_url=panel_url,
                                                                    login=login,
                                                                    password=password,
